@@ -1,6 +1,4 @@
-/**
- * Modified from JavaiPacman by Junyang Gu
- * 
+/* 
  * @author Sarthak Ahuja
  */
 
@@ -12,10 +10,9 @@ import java.awt.event.*;
 /**
  * the main class of the simulator
  */
-public class cpcman extends Frame
+public class Simulator extends Frame
 implements Runnable, KeyListener, ActionListener, WindowListener
 {
-	private static final long serialVersionUID = 3582431359568375379L;
 	// the timer
 	Thread timer;
 	int timerPeriod=12;  // in miliseconds
@@ -40,10 +37,10 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	Graphics offScreenG;
 
 	// the objects    
-	cmaze maze;
+	Map maze;
 	cpac pac;
-	cpowerdot powerDot;
-	cghost [] ghosts;
+	Item powerDot;
+	Agent [] ghosts;
 
 	// game counters
 	final int PAcLIVE=3;
@@ -84,6 +81,8 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	MenuBar menuBar;
 	Menu help;
 	MenuItem about;
+	
+	Warehouse warehouse;
 
 	// the direction specified by key
 	int pacKeyDir;
@@ -96,11 +95,12 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	// initialize the object
 	// only called once at the beginning
 	////////////////////////////////////////////////
-	public cpcman()
+	public Simulator(Warehouse warehouse)
 	{
-		super("P*C MAN");
+		super("MAPP: Warehouse Simulator");
+		
+		this.warehouse=warehouse;
 
-		// init variables
 		hiScore=0;
 
 		gameState=INITIMAGE;
@@ -117,14 +117,12 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 		show();
 
-		// System.out.println("cpcman done");
-
 	}
 
 	void initGUI()
 	{
 		menuBar=new MenuBar();
-		help=new Menu("HELP");
+		help=new Menu("File");
 		about=new MenuItem("About");
 
 		help.add(about);
@@ -132,25 +130,23 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 		setMenuBar(menuBar);
 
-		addNotify();  // for updated inset information
-
-		// System.out.println("initGUI done.");
+		addNotify(); 
 	}
 
 	public void initImages()
 	{
 		// initialize off screen drawing canvas
-		offScreen=createImage(cmaze.iWidth, cmaze.iHeight); 
+		offScreen=createImage(Map.iWidth, Map.iHeight); 
 		if (offScreen==null)
 			System.out.println("createImage failed");
 		offScreenG=offScreen.getGraphics();
 
 		// initialize maze object
-		maze = new cmaze(this, offScreenG);
+		maze = new Map(this, offScreenG,warehouse);
 
 		// initialize ghosts object
 		// 4 ghosts
-		ghosts = new cghost[4];
+		ghosts = new Agent[4];
 		for (int i=0; i<4; i++)
 		{
 			Color color;
@@ -162,11 +158,11 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 				color=Color.white;
 			else 
 				color=Color.orange;
-			ghosts[i]=new cghost(this, offScreenG, maze, color);
+			ghosts[i]=new Agent(this, offScreenG, maze, color);
 		}
 
 		// initialize power dot object
-		powerDot = new cpowerdot(this, offScreenG, ghosts);
+		powerDot = new Item(this, offScreenG, ghosts);
 
 		// initialize pac object
 		//      	pac = new cpac(this, offScreenG, maze, powerDot, ghosts);
@@ -226,7 +222,8 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		maze.draw();	// draw maze in off screen buffer
 
 		pac.start();
-		pacKeyDir=ctables.DOWN;
+		
+		pacKeyDir=Utility.DOWN;
 		for (int i=0; i<4; i++)
 			ghosts[i].start(i,round);
 
@@ -239,6 +236,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	///////////////////////////////////////////
 	public void paint(Graphics g)
 	{
+		
 		if (gameState == INITIMAGE)
 		{
 			// System.out.println("first paint(...)...");
@@ -279,8 +277,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 	void paintUpdate(Graphics g)
 	{
-		// updating the frame
-
+		System.out.println("GRAPHICS");
 		powerDot.draw();
 
 		for (int i=0; i<4; i++)
@@ -341,6 +338,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	////////////////////////////////////////////////////////////
 	void move()
 	{
+		System.out.println("MOVES");
 		int k;
 
 		int oldScore=score;
@@ -348,8 +346,8 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		for (int i=0; i<4; i++)
 			ghosts[i].move(pac.iX, pac.iY, pac.iDir);
 
-		k=pac.move(pacKeyDir);
-
+		//k=pac.move(pacKeyDir);
+		k=0;
 		if (k==1)	// eaten a dot
 		{
 			changeScore=1;
@@ -409,7 +407,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	///////////////////////////////////////////
 	public void update(Graphics g)
 	{
-		// System.out.println("update called");
+		 System.out.println("update called");
 		if (gameState == INITIMAGE)
 			return;
 
@@ -428,7 +426,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 			switch (gameState)
 			{
 			case STARTWAIT: 
-				if (pacKeyDir==ctables.UP)	// the key to start game
+				if (pacKeyDir==Utility.UP)	// the key to start game
 					gameState=RUNNING;
 				else
 					return;
@@ -446,7 +444,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 					startGame();
 				gameState=STARTWAIT;
 				wait=WAITCOUNT;
-				pacKeyDir=ctables.DOWN;
+				pacKeyDir=Utility.DOWN;
 				break;
 			case SUSPENDED:
 				if (key==SUSPEND)
@@ -468,19 +466,19 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		{
 		case KeyEvent.VK_RIGHT:
 		case KeyEvent.VK_L:
-			pacKeyDir=ctables.RIGHT;
+			pacKeyDir=Utility.RIGHT;
 			// e.consume();
 			break;
 		case KeyEvent.VK_UP:
-			pacKeyDir=ctables.UP;
+			pacKeyDir=Utility.UP;
 			// e.consume();
 			break;
 		case KeyEvent.VK_LEFT:
-			pacKeyDir=ctables.LEFT;
+			pacKeyDir=Utility.LEFT;
 			// e.consume();
 			break;
 		case KeyEvent.VK_DOWN:
-			pacKeyDir=ctables.DOWN;
+			pacKeyDir=Utility.DOWN;
 			// e.consume();
 			break;
 		case KeyEvent.VK_S:
@@ -502,7 +500,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	{
 		if (gameState==RUNNING)
 			key=SUSPEND;
-		new cabout(this);
+		new AboutWindow(this);
 		// e.consume();
 	}
 

@@ -1,13 +1,11 @@
-/**
- * Modified from JavaiPacman by Junyang Gu
- * 
+/* 
  * @author Sarthak Ahuja
  */
 package com.ai.major;
 
 import java.awt.*;
 
-public class cimage
+public class Visuals
 {
 	public static void drawDot(Image img)
 	{

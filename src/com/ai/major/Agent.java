@@ -1,14 +1,13 @@
-/**
- * Modified from JavaiPacman by Junyang Gu
- * 
+/* 
  * @author Sarthak Ahuja
  */
 package com.ai.major;
 
 import java.lang.Error;
+import com.ai.major.Utility;
 import java.awt.*;
 
-public class cghost
+public class Agent
 {
 	final int IN=0;
 	final int OUT=1;
@@ -21,7 +20,7 @@ public class cghost
 	final int INIT_BLIND_COUNT=600;	// remain blind for ??? frames
 	int blindCount;
 
-	cspeed speed=new cspeed();
+	SpeedControl speed=new SpeedControl();
 
 	int iX, iY, iDir, iStatus;
 	int iBlink, iBlindCount;
@@ -35,27 +34,27 @@ public class cghost
 	Graphics graphics;
 
 	// the maze the ghosts knows
-	cmaze maze;
+	Map maze;
 
 	// the ghost image
 	Image imageGhost; 
 	Image imageBlind;
 	Image imageEye;
 
-	cghost(Window a, Graphics g, cmaze m, Color color)
+	Agent(Window a, Graphics g, Map m, Color color)
 	{
 		applet=a;
 		graphics=g;
 		maze=m;
 
 		imageGhost=applet.createImage(18,18);
-		cimage.drawGhost(imageGhost, 0, color);
+		Visuals.drawGhost(imageGhost, 0, color);
 
 		imageBlind=applet.createImage(18,18);
-		cimage.drawGhost(imageBlind,1, Color.white);
+		Visuals.drawGhost(imageBlind,1, Color.white);
 
 		imageEye=applet.createImage(18,18);
-		cimage.drawGhost(imageEye,2, Color.lightGray);
+		Visuals.drawGhost(imageEye,2, Color.lightGray);
 	}
 
 	public void start(int initialPosition, int round)
@@ -124,13 +123,13 @@ public class cghost
 
 		if (iStatus!=EYE)
 		{
-			iX+= ctables.iXDirection[iDir];
-			iY+= ctables.iYDirection[iDir];
+			iX+= Utility.iXDirection[iDir];
+			iY+= Utility.iYDirection[iDir];
 		}
 		else
 		{	
-			iX+=2* ctables.iXDirection[iDir];
-			iY+=2* ctables.iYDirection[iDir];
+			iX+=2* Utility.iXDirection[iDir];
+			iY+=2* Utility.iYDirection[iDir];
 		}
 
 	}
@@ -144,9 +143,9 @@ public class cghost
 
 		for (i=0; i<4; i++)
 		{
-			iM=maze.iMaze[iY/16 + ctables.iYDirection[i]]
-			              [iX/16 + ctables.iXDirection[i]];
-			if (iM!=cmaze.WALL && i != ctables.iBack[iDir] )
+			iM=maze.iMaze[iY/16 + Utility.iYDirection[i]]
+			              [iX/16 + Utility.iXDirection[i]];
+			if (iM!=Map.WALL && i != Utility.iBack[iDir] )
 			{
 				iDirTotal++;
 			}
@@ -154,21 +153,21 @@ public class cghost
 		// randomly select a direction
 		if (iDirTotal!=0)
 		{
-			iRand=cuty.RandSelect(iDirTotal);
+			iRand=Utility.RandSelect(iDirTotal);
 			if (iRand>=iDirTotal)
 				throw new Error("iRand out of range");
 			//				exit(2);
 			for (i=0; i<4; i++)
 			{
-				iM=maze.iMaze[iY/16+ ctables.iYDirection[i]]
-				              [iX/16+ ctables.iXDirection[i]];
-				if (iM!=cmaze.WALL && i != ctables.iBack[iDir] )
+				iM=maze.iMaze[iY/16+ Utility.iYDirection[i]]
+				              [iX/16+ Utility.iXDirection[i]];
+				if (iM!=Map.WALL && i != Utility.iBack[iDir] )
 				{
 					iRand--;
 					if (iRand<0)
 						// the right selection
 					{
-						if (iM== cmaze.DOOR)
+						if (iM== Map.DOOR)
 							iStatus=OUT;
 						iDir=i;	break;
 					}
@@ -189,9 +188,9 @@ public class cghost
 		for (i=0; i<4; i++)
 		{
 			iDirCount[i]=0;
-			iM=maze.iMaze[iY/16 + ctables.iYDirection[i]]
-			              [iX/16+ ctables.iXDirection[i]];
-			if (iM!=cmaze.WALL && i!= ctables.iBack[iDir] && iM!= cmaze.DOOR )
+			iM=maze.iMaze[iY/16 + Utility.iYDirection[i]]
+			              [iX/16+ Utility.iXDirection[i]];
+			if (iM!=Map.WALL && i!= Utility.iBack[iDir] && iM!= Map.DOOR )
 				// door is not accessible for OUT
 			{
 				iDirCount[i]++;
@@ -221,15 +220,15 @@ public class cghost
 		// randomly select a direction
 		if (iDirTotal!=0)
 		{	
-			iRand=cuty.RandSelect(iDirTotal);
+			iRand=Utility.RandSelect(iDirTotal);
 			if (iRand>=iDirTotal)
 				throw new Error("iRand out of range");
 			// exit(2);
 			for (i=0; i<4; i++)
 			{
-				iM=maze.iMaze[iY/16+ ctables.iYDirection[i]]
-				              [iX/16+ ctables.iXDirection[i]];
-				if (iM!=cmaze.WALL && i!= ctables.iBack[iDir] && iM!= cmaze.DOOR )
+				iM=maze.iMaze[iY/16+ Utility.iYDirection[i]]
+				              [iX/16+ Utility.iXDirection[i]];
+				if (iM!=Map.WALL && i!= Utility.iBack[iDir] && iM!= Map.DOOR )
 				{	
 					iRand-=iDirCount[i];
 					if (iRand<0)
@@ -256,15 +255,15 @@ public class cghost
 			// reverse
 			if (iX%16!=0 || iY%16!=0)
 			{
-				iDir= ctables.iBack[iDir];
+				iDir= Utility.iBack[iDir];
 				// a special condition:
 				// when ghost is leaving home, it can not go back
 				// while becoming blind
 				int iM;
-				iM=maze.iMaze[iY/16+ ctables.iYDirection[iDir]]
-				              [iX/16+ ctables.iXDirection[iDir]];
-				if (iM == cmaze.DOOR)
-					iDir=ctables.iBack[iDir];
+				iM=maze.iMaze[iY/16+ Utility.iYDirection[iDir]]
+				              [iX/16+ Utility.iXDirection[iDir]];
+				if (iM == Map.DOOR)
+					iDir=Utility.iBack[iDir];
 			}
 		}
 	}
@@ -280,9 +279,9 @@ public class cghost
 		for (i=0; i<4; i++)
 		{
 			iDirCount[i]=0;
-			iM=maze.iMaze[iY/16 + ctables.iYDirection[i]]
-			              [iX/16+ctables.iXDirection[i]];
-			if (iM!= cmaze.WALL && i!= ctables.iBack[iDir])
+			iM=maze.iMaze[iY/16 + Utility.iYDirection[i]]
+			              [iX/16+Utility.iXDirection[i]];
+			if (iM!= Map.WALL && i!= Utility.iBack[iDir])
 			{
 				iDirCount[i]++;
 				switch (i)
@@ -311,21 +310,21 @@ public class cghost
 		// randomly select a direction
 		if (iDirTotal!=0)
 		{
-			iRand= cuty.RandSelect(iDirTotal);
+			iRand= Utility.RandSelect(iDirTotal);
 			if (iRand>=iDirTotal)
 				throw new Error("RandSelect out of range");
 			//				exit(2);
 			for (i=0; i<4; i++)
 			{
-				iM=maze.iMaze[iY/16+ ctables.iYDirection[i]]
-				              [iX/16+ ctables.iXDirection[i]];
-				if (iM!= cmaze.WALL && i!= ctables.iBack[iDir])
+				iM=maze.iMaze[iY/16+ Utility.iYDirection[i]]
+				              [iX/16+ Utility.iXDirection[i]];
+				if (iM!= Map.WALL && i!= Utility.iBack[iDir])
 				{
 					iRand-=iDirCount[i];
 					if (iRand<0)
 						// the right selection
 					{
-						if (iM== cmaze.DOOR)
+						if (iM== Map.DOOR)
 							iStatus=IN;
 						iDir=i;	break;
 					}
@@ -348,8 +347,8 @@ public class cghost
 		for (i=0; i<4; i++)
 		{
 			iDirCount[i]=0;
-			iM=maze.iMaze[iY/16+ ctables.iYDirection[i]][iX/16+ ctables.iXDirection[i]];
-			if (iM != cmaze.WALL && i != ctables.iBack[iDir] && iM != cmaze.DOOR)
+			iM=maze.iMaze[iY/16+ Utility.iYDirection[i]][iX/16+ Utility.iXDirection[i]];
+			if (iM != Map.WALL && i != Utility.iBack[iDir] && iM != Map.DOOR)
 				// door is not accessible for OUT
 			{
 				iDirCount[i]++;
@@ -380,15 +379,15 @@ public class cghost
 		// randomly select a direction
 		if (iDirTotal!=0)
 		{
-			iRand=cuty.RandSelect(iDirTotal);
+			iRand=Utility.RandSelect(iDirTotal);
 			if (iRand>=iDirTotal)
 				throw new Error("RandSelect out of range");
 			//				exit(2);
 			for (i=0; i<4; i++)
 			{	
-				iM=maze.iMaze[iY/16+ ctables.iYDirection[i]]
-				              [iX/16+ ctables.iXDirection[i]];
-				if (iM!= cmaze.WALL && i!= ctables.iBack[iDir])
+				iM=maze.iMaze[iY/16+ Utility.iYDirection[i]]
+				              [iX/16+ Utility.iXDirection[i]];
+				if (iM!= Map.WALL && i!= Utility.iBack[iDir])
 				{	
 					iRand-=iDirCount[i];
 					if (iRand<0)

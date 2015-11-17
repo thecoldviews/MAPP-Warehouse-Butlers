@@ -1,13 +1,11 @@
-/**
- * Modified from JavaiPacman by Junyang Gu
- * 
+/* 
  * @author Sarthak Ahuja
  */
 package com.ai.major;
 
 import java.awt.*;
 
-public class cpowerdot
+public class Item
 {
 	final int iX[]={1,19,1,19};
 	final int iY[]={2,2,13,13};
@@ -25,7 +23,7 @@ public class cpowerdot
 	Graphics graphics;
 
 	// the ghosts it controls
-	cghost [] ghosts;
+	Agent [] ghosts;
 
 	// the power dot image
 	Image imagePowerDot;
@@ -33,7 +31,7 @@ public class cpowerdot
 	// the blank image
 	Image imageBlank;
 
-	cpowerdot(Window a, Graphics g, cghost [] gh)
+	Item(Window a, Graphics g, Agent [] gh)
 	{
 		applet=a;
 		graphics=g;
@@ -43,7 +41,7 @@ public class cpowerdot
 		iValid = new int[4];
 
 		imagePowerDot=applet.createImage(16,16);
-		cimage.drawPowerDot(imagePowerDot);
+		Visuals.drawPowerDot(imagePowerDot);
 
 		imageBlank=applet.createImage(16,16);
 		Graphics imageG=imageBlank.getGraphics();

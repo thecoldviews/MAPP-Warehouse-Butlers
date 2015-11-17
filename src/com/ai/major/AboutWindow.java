@@ -1,6 +1,4 @@
-/**
- * Modified from JavaiPacman by Junyang Gu
- * 
+/* 
  * @author Sarthak Ahuja
  */
 package com.ai.major;
@@ -9,22 +7,20 @@ import java.awt.*;
 import java.awt.event.*;
 
 // to display about information
-class cabout extends Window
+class AboutWindow extends Window
 implements MouseListener
 {
-	private static final long serialVersionUID = -6444989674095739037L;
-
 	final String[] about = {
 			"",
-			"javaiPacman",
+			"MAPP: Warehouse Butlers",
 			"",
-			"  - Copyright 1997-2010 Junyang Gu <mikejyg@gmail.com>",
+			"  - Copyright 2015 Sarthak Ahuja & Anchita Goel",
 			"",
-			"an intelligent pacman game implmented in Java",
+			"Artificial Intelligence Major Project IIIT-Delhi",
 			""
 	};
 
-	cabout(Frame parent)
+	AboutWindow(Frame parent)
 	{
 		super(parent);
 

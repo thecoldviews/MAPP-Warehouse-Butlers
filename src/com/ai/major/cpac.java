@@ -1,6 +1,4 @@
-/**
- * Modified from JavaiPacman by Junyang Gu
- * 
+/* 
  * @author Sarthak Ahuja
  */
 package com.ai.major;
@@ -27,15 +25,15 @@ public class cpac
 	Image [][] imagePac;
 
 	// the knowledge of the maze
-	cmaze maze;
+	Map maze;
 
 	// the knowledge of the power dots
-	cpowerdot powerDot;
+	Item powerDot;
 
 	//    cpacmove cAuto;
 
-	//  cpac(Window a, Graphics g, cmaze m, cpowerdot p, cghost cghost[])
-	cpac(Window a, Graphics g, cmaze m, cpowerdot p)    {
+	//  cpac(Window a, Graphics g, Map m, cpowerdot p, cghost cghost[])
+	cpac(Window a, Graphics g, Map m, Item p)    {
 		applet=a;
 		graphics=g;
 		maze=m;
@@ -49,7 +47,7 @@ public class cpac
 			for (int j=0; j<4; j++)
 			{
 				imagePac[i][j]=applet.createImage(18,18);
-				cimage.drawPac(imagePac[i][j],i,j);
+				Visuals.drawPac(imagePac[i][j],i,j);
 			}	
 	}
 
@@ -93,8 +91,8 @@ public class cpac
 			}	
 			else    // need to see whether ahead block is OK
 			{
-				if ( mazeOK(iX/16+ ctables.iXDirection[iNextDir],
-						iY/16+ ctables.iYDirection[iNextDir]) )
+				if ( mazeOK(iX/16+ Utility.iXDirection[iNextDir],
+						iY/16+ Utility.iYDirection[iNextDir]) )
 				{
 					iDir=iNextDir;
 					iNextDir=-1;
@@ -107,29 +105,29 @@ public class cpac
 			// see whether has eaten something
 			switch (maze.iMaze[iY/16][iX/16])
 			{
-			case cmaze.DOT:
+			case Map.DOT:
 				eaten=1;
-				maze.iMaze[iY/16][iX/16]=cmaze.BLANK;	// eat dot
+				maze.iMaze[iY/16][iX/16]=Map.BLANK;	// eat dot
 				maze.iTotalDotcount--;
 				iDotWait=DOT_WAIT;
 				break;
-			case cmaze.POWER_DOT:
+			case Map.POWER_DOT:
 				eaten=2;
 				powerDot.eat(iX/16, iY/16);
-				maze.iMaze[iY/16][iX/16]=cmaze.BLANK;
+				maze.iMaze[iY/16][iX/16]=Map.BLANK;
 				break;
 			}
 
-			if (maze.iMaze[iY/16+ ctables.iYDirection[iDir]]
-			               [iX/16+ ctables.iXDirection[iDir]]==1)
+			if (maze.iMaze[iY/16+ Utility.iYDirection[iDir]]
+			               [iX/16+ Utility.iXDirection[iDir]]==1)
 			{
 				return(eaten);	// not valid move
 			}
 		}
 		if (iDotWait==0)
 		{
-			iX+= ctables.iXDirection[iDir];
-			iY+= ctables.iYDirection[iDir];
+			iX+= Utility.iXDirection[iDir];
+			iY+= Utility.iYDirection[iDir];
 		}
 		else	iDotWait--;
 		return(eaten);
@@ -137,7 +135,7 @@ public class cpac
 
 	boolean mazeOK(int iRow, int icol)
 	{
-		if ( (maze.iMaze[icol][iRow] & ( cmaze.WALL | cmaze.DOOR)) ==0)
+		if ( (maze.iMaze[icol][iRow] & ( Map.WALL | Map.DOOR)) ==0)
 			return(true);
 		return(false);
 	}

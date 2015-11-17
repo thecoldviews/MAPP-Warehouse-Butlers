@@ -1,6 +1,4 @@
-/**
- * Modified from JavaiPacman by Junyang Gu
- * 
+/* 
  * @author Sarthak Ahuja
  */
 package com.ai.major;
@@ -8,7 +6,7 @@ package com.ai.major;
 import java.awt.*;
 
 /* define the maze */
-public class cmaze
+public class Map
 {
 	// constant definitions
 	static final int BLANK=0;
@@ -39,14 +37,16 @@ public class cmaze
 
 	// the status of maze
 	int[][] iMaze;
+	
+	Warehouse warehouse;
 
 	// initialize the maze
-	cmaze(Window a, Graphics g)
+	Map(Window a, Graphics g, Warehouse warehouse)
 	{
 		// setup associations
 		applet=a;
 		graphics=g;
-
+		this.warehouse=warehouse;
 		imageMaze=applet.createImage(iWidth, iHeight);
 		imageDot=applet.createImage(2,2);
 
@@ -61,7 +61,7 @@ public class cmaze
 		for (i=0; i<HEIGHT; i++)
 			for (j=0; j<WIDTH; j++)
 			{
-				switch (ctables.MazeDefine[i].charAt(j))
+				switch (warehouse.MazeDefine[i].charAt(j))
 				{
 				case ' ':
 					k=BLANK;
@@ -111,7 +111,7 @@ public class cmaze
 	void createImage()
 	{
 		// create the image of a dot
-		cimage.drawDot(imageDot);
+		Visuals.drawDot(imageDot);
 
 		// create the image of the maze
 		Graphics gmaze=imageMaze.getGraphics();
@@ -140,7 +140,7 @@ public class cmaze
 		{
 			for (j=0; j<WIDTH; j++)
 			{
-				for (iDir=ctables.RIGHT; iDir<=ctables.DOWN; iDir++)
+				for (iDir=Utility.RIGHT; iDir<=Utility.DOWN; iDir++)
 				{
 					if (iMaze[i][j]==DOOR)
 					{
@@ -150,29 +150,29 @@ public class cmaze
 					if (iMaze[i][j]!=WALL)	continue;
 					switch (iDir)
 					{
-					case ctables.UP:
+					case Utility.UP:
 						if (i==0)	break;
 						if (iMaze[i-1][j]==WALL)
 							break;
-						DrawBoundary(g, j, i-1, ctables.DOWN);
+						DrawBoundary(g, j, i-1, Utility.DOWN);
 						break;
-					case ctables.RIGHT:
+					case Utility.RIGHT:
 						if (j==WIDTH-1)	break;
 						if (iMaze[i][j+1]==WALL)
 							break;
-						DrawBoundary(g, j+1,i, ctables.LEFT);
+						DrawBoundary(g, j+1,i, Utility.LEFT);
 						break;
-					case ctables.DOWN:
+					case Utility.DOWN:
 						if (i==HEIGHT-1)	break;
 						if (iMaze[i+1][j]==WALL)
 							break;
-						DrawBoundary(g, j,i+1, ctables.UP);
+						DrawBoundary(g, j,i+1, Utility.UP);
 						break;
-					case ctables.LEFT:
+					case Utility.LEFT:
 						if (j==0)	break;
 						if (iMaze[i][j-1]==WALL)
 							break;
-						DrawBoundary(g, j-1,i, ctables.RIGHT);
+						DrawBoundary(g, j-1,i, Utility.RIGHT);
 						break;
 					default:	
 					}
@@ -189,7 +189,7 @@ public class cmaze
 
 		switch (iDir)
 		{
-		case ctables.LEFT:
+		case Utility.LEFT:
 			// draw lower half segment 
 			if (iMaze[row+1][col]!=WALL)
 				// down empty
@@ -229,7 +229,7 @@ public class cmaze
 			}	
 			break;
 
-		case ctables.RIGHT:
+		case Utility.RIGHT:
 			// draw lower half segment 
 			if (iMaze[row+1][col]!=WALL)
 				// down empty
@@ -268,7 +268,7 @@ public class cmaze
 			}
 			break;
 
-		case ctables.UP:
+		case Utility.UP:
 			// draw left half segment 
 			if (iMaze[row][col-1]!=WALL)
 				// left empty
@@ -298,7 +298,7 @@ public class cmaze
 				}
 			break;
 
-		case ctables.DOWN:
+		case Utility.DOWN:
 			// draw left half segment
 			if (iMaze[row][col-1]!=WALL)
 				// left empty

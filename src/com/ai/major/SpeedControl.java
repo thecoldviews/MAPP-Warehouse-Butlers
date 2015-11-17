@@ -1,6 +1,4 @@
-/**
- * Modified from JavaiPacman by Junyang Gu
- * 
+/* 
  * @author Sarthak Ahuja
  */
 package com.ai.major;
@@ -13,7 +11,7 @@ package com.ai.major;
  * call start() to reset counters
  * call isMove per frame to see if step are to be taken
  */
-public class cspeed
+public class SpeedControl
 {
 	// move steps per frames
 	int steps;
@@ -24,7 +22,7 @@ public class cspeed
 
 	float frameStepRatio;
 
-	cspeed()
+	SpeedControl()
 	{
 		start(1,1);
 	}
