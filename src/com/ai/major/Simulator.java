@@ -4,8 +4,25 @@
 
 package com.ai.major;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * the main class of the simulator
@@ -13,6 +30,10 @@ import java.awt.event.*;
 public class Simulator extends Frame
 implements Runnable, KeyListener, ActionListener, WindowListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// the timer
 	Thread timer;
 	int timerPeriod=12;  // in miliseconds
@@ -37,15 +58,11 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	Graphics offScreenG;
 
 	// the objects    
-	Map maze;
-	cpac pac;
-	Item powerDot;
-	Agent [] ghosts;
-
-	// game counters
-	final int PAcLIVE=3;
-	int pacRemain;
-	int changePacRemain;  // to signal redraw remaining pac
+	Map map;
+	ArrayList<Item> items;
+	ArrayList<Butler> butlers;
+	Set<Butler> IdleButlers;
+	Set<Butler> NonIdleButlers;
 
 	// score
 	int score;
@@ -64,15 +81,10 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	final int INITIMAGE=100;  // need to wait before paint anything
 	final int STARTWAIT=0;  // wait before running
 	final int RUNNING=1;
-	final int DEADWAIT=2;   // wait after dead
-	final int SUSPENDED=3;  // suspended during game
 	int gameState;
 
 	final int WAITCOUNT=100;	// 100 frames for wait states
 	int wait;	// the counter
-
-	// rounds
-	int round;  // the round of current game;
 
 	// whether it is played in a new maze
 	boolean newMaze;
@@ -84,17 +96,11 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	
 	Warehouse warehouse;
 
-	// the direction specified by key
-	int pacKeyDir;
+	int KeyPressed;
 	int key=0;
 	final int NONE=0;
-	final int SUSPEND=1;  // stop/start
-	final int BOSS=2;      // boss
-
-	////////////////////////////////////////////////
-	// initialize the object
-	// only called once at the beginning
-	////////////////////////////////////////////////
+	
+	//INITIALIZATION
 	public Simulator(Warehouse warehouse)
 	{
 		super("MAPP: Warehouse Simulator");
@@ -106,6 +112,11 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		gameState=INITIMAGE;
 
 		initGUI();
+		
+		items = new ArrayList<Item>();
+		butlers = new ArrayList<Butler>();
+		IdleButlers = new HashSet<Butler>();
+		NonIdleButlers = new HashSet<Butler>();
 
 		addWindowListener(this);
 
@@ -119,6 +130,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 	}
 
+	//INITIALIZE GUI
 	void initGUI()
 	{
 		menuBar=new MenuBar();
@@ -133,42 +145,32 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		addNotify(); 
 	}
 
+	//INITIALIZE GRAPHICS
 	public void initImages()
 	{
-		// initialize off screen drawing canvas
+		// INITIALIZE CANVAS
 		offScreen=createImage(Map.iWidth, Map.iHeight); 
 		if (offScreen==null)
 			System.out.println("createImage failed");
 		offScreenG=offScreen.getGraphics();
-
-		// initialize maze object
-		maze = new Map(this, offScreenG,warehouse);
-
-		// initialize ghosts object
-		// 4 ghosts
-		ghosts = new Agent[4];
-		for (int i=0; i<4; i++)
+		
+		//INITIALIZE MAP
+		map = new Map(this, offScreenG,warehouse);
+		
+		//GET ITEMS ON THE MAP
+		items = map.getItems();
+		
+		//INITIALIZE BUTLERS
+		for (int i=0; i<Utility.numButlers; i++)
 		{
 			Color color;
-			if (i==0)
-				color=Color.red;
-			else if (i==1)
-				color=Color.blue;
-			else if (i==2)
-				color=Color.white;
-			else 
-				color=Color.orange;
-			ghosts[i]=new Agent(this, offScreenG, maze, color);
+			color=Utility.ColorArray[i];
+			Butler b =new Butler(this, offScreenG, map, color);
+			butlers.add(b);
+			IdleButlers.add(b);
 		}
 
-		// initialize power dot object
-		powerDot = new Item(this, offScreenG, ghosts);
 
-		// initialize pac object
-		//      	pac = new cpac(this, offScreenG, maze, powerDot, ghosts);
-		pac = new cpac(this, offScreenG, maze, powerDot);
-
-		// initialize the score images
 		imgScore=createImage(150,16);
 		imgScoreG=imgScore.getGraphics();
 		imgHiScore=createImage(150,16);
@@ -176,89 +178,78 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 		imgHiScoreG.setColor(Color.black);
 		imgHiScoreG.fillRect(0,0,150,16);
-		imgHiScoreG.setColor(Color.red);
+		imgHiScoreG.setColor(Color.green);
 		imgHiScoreG.setFont(new Font("Helvetica", Font.BOLD, 12));
-		imgHiScoreG.drawString("HI SCORE", 0, 14);
+		imgHiScoreG.drawString("STATES:", 0, 14);
 
 		imgScoreG.setColor(Color.black);
 		imgScoreG.fillRect(0,0,150,16);
 		imgScoreG.setColor(Color.green);
 		imgScoreG.setFont(new Font("Helvetica", Font.BOLD, 12));
-		imgScoreG.drawString("SCORE", 0, 14);
+		imgScoreG.drawString("MEMORY:", 0, 14);
 	}
 
+	//START TIMER
 	void startTimer()
 	{   
-		// start the timer
 		timer = new Thread(this);
 		timer.start();
 	}
-
+	
+	//START GAME
 	void startGame()
 	{
-		pacRemain=PAcLIVE;
-		changePacRemain=1;
-
 		score=0;
 		changeScore=1;
 
 		newMaze=true;
 
-		round=1;
-
 		startRound();
 	}
 
+	//START ROUND
 	void startRound()
 	{
-		// new round for maze?
 		if (newMaze==true)
 		{
-			maze.start();
-			powerDot.start();
+			map.start();
+			for (int i=0; i<items.size(); i++){
+				items.get(i).start();
+			}
 			newMaze=false;
 		}
 
-		maze.draw();	// draw maze in off screen buffer
+		map.draw();	
 
-		pac.start();
+		KeyPressed=Utility.DOWN;
 		
-		pacKeyDir=Utility.DOWN;
-		for (int i=0; i<4; i++)
-			ghosts[i].start(i,round);
-
+		for (int i=0; i<items.size(); i++){
+			IdleButlers.remove(butlers.get(i));
+			NonIdleButlers.add(butlers.get(i));
+			butlers.get(i).start(map.getWSX(),map.getWSY(),items.get(i));
+		}
 		gameState=STARTWAIT;
 		wait=WAITCOUNT;
 	}
 
-	///////////////////////////////////////////
-	// paint everything
-	///////////////////////////////////////////
+	//PAINT EVERYTHING IN THE BEGINNING
 	public void paint(Graphics g)
 	{
 		
 		if (gameState == INITIMAGE)
 		{
-			// System.out.println("first paint(...)...");
-
-			// init images, must be done after show() because of Graphics
 			initImages();
 
-			// set the proper size of canvas
 			Insets insets=getInsets();
 
 			topOffset=insets.top;
 			leftOffset=insets.left;
-
-			//  System.out.println(topOffset);
-			//  System.out.println(leftOffset);
 
 			setSize(canvasWidth+insets.left+insets.right,
 					canvasHeight+insets.top+insets.bottom);
 
 			setResizable(false);
 
-			// now we can start timer
 			startGame();	  
 
 			startTimer();
@@ -270,26 +261,24 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 		changeScore=1;
 		changeHiScore=1;
-		changePacRemain=1;
 
 		paintUpdate(g);
 	}
 
 	void paintUpdate(Graphics g)
 	{
-		System.out.println("GRAPHICS");
-		powerDot.draw();
+		for (int i=0; i<items.size(); i++)
+			items.get(i).draw();
+		
+		Iterator<Butler> iterator = (Iterator<Butler>)NonIdleButlers.iterator();
+		while(iterator.hasNext()){
+			(iterator.next()).draw();
+		}
 
-		for (int i=0; i<4; i++)
-			ghosts[i].draw();
-
-		pac.draw();
-
-		// display the offscreen
 		g.drawImage(offScreen, 
 				iMazeX+ leftOffset, iMazeY+ topOffset, this); 
 
-		// display extra information
+		// DISPLAY STATS
 		if (changeHiScore==1)
 		{
 			imgHiScoreG.setColor(Color.black);
@@ -313,142 +302,47 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 			changeScore=0;
 		}
-
-		// update pac life info
-		if (changePacRemain==1)
+		
+		// UPDATE NUMBER OF AGENTS WORKING 
+		Iterator<Butler> iterator_ = (Iterator<Butler>) IdleButlers.iterator();
+		int count=0;
+		while (iterator_.hasNext())
 		{
-			int i;
-			for (i=1; i<pacRemain; i++)
-			{
-				g.drawImage(pac.imagePac[0][0], 
-						16*i+ leftOffset, 
-						canvasHeight-18+ topOffset, this);
-			}
-			g.drawImage(powerDot.imageBlank, 
-					16*i+ leftOffset, 
-					canvasHeight-17+ topOffset, this); 
-
-			changePacRemain=0;
+			g.drawImage(iterator_.next().imageIdle, 
+					16*count+ leftOffset, 
+					canvasHeight-18+ topOffset, this);
+			count++;
 		}
 	}
 
-	////////////////////////////////////////////////////////////
-	// controls moves
-	// this is the routine running at the background of drawings
-	////////////////////////////////////////////////////////////
+	//MAKE A MOVE FOR EACH BUTLER
 	void move()
 	{
-		System.out.println("MOVES");
-		int k;
-
-		int oldScore=score;
-
-		for (int i=0; i<4; i++)
-			ghosts[i].move(pac.iX, pac.iY, pac.iDir);
-
-		//k=pac.move(pacKeyDir);
-		k=0;
-		if (k==1)	// eaten a dot
-		{
-			changeScore=1;
-			score+= 10 * ((round+1)/2) ;
-		}
-		else if (k==2)	// eaten a powerDot
-		{
-			scoreGhost=200;
-		}
-
-		if (maze.iTotalDotcount==0)
-		{
-			gameState=DEADWAIT;
-			wait=WAITCOUNT;
-			newMaze=true;
-			round++;
-			return;
-		}
-
-		for (int i=0; i<4; i++)
-		{
-			k=ghosts[i].testCollision(pac.iX, pac.iY);
-			if (k==1)	// kill pac
-			{
-				pacRemain--;
-				changePacRemain=1;
-				gameState=DEADWAIT;	// stop the game
-				wait=WAITCOUNT;
-				return;	
-			}
-			else if (k==2)	// caught by pac
-			{
-				score+= scoreGhost * ((round+1)/2) ;
-				changeScore=1;
-				scoreGhost*=2;
-			}		
-		}
-
-		if (score>hiScore)
-		{
-			hiScore=score;
-			changeHiScore=1;
-		}
-
-		if ( changeScore==1 )
-		{
-			if ( score/10000 - oldScore/10000 > 0 )
-			{
-				pacRemain++;			// bonus
-				changePacRemain=1;
-			}
-		}
+		Iterator<Butler> iterator_ = (Iterator<Butler>) NonIdleButlers.iterator();
+		while (iterator_.hasNext())
+			iterator_.next().move();
 	}	
 
-	///////////////////////////////////////////
-	// this is the routine draw each frames
-	///////////////////////////////////////////
+	//CLOCK FUNCTION
 	public void update(Graphics g)
 	{
-		 System.out.println("update called");
 		if (gameState == INITIMAGE)
 			return;
 
-		// seperate the timer from update
 		if (signalMove!=0)
 		{
-			// System.out.println("update by timer");
 			signalMove=0;
-
-			if (wait!=0)
-			{
-				wait--;
-				return;
-			}
 
 			switch (gameState)
 			{
 			case STARTWAIT: 
-				if (pacKeyDir==Utility.UP)	// the key to start game
+				if (KeyPressed==Utility.UP)
 					gameState=RUNNING;
 				else
 					return;
 				break;
 			case RUNNING:
-				if (key==SUSPEND)
-					gameState=SUSPENDED;
-				else
 					move();
-				break;
-			case DEADWAIT:
-				if (pacRemain>0)
-					startRound();
-				else
-					startGame();
-				gameState=STARTWAIT;
-				wait=WAITCOUNT;
-				pacKeyDir=Utility.DOWN;
-				break;
-			case SUSPENDED:
-				if (key==SUSPEND)
-					gameState=RUNNING;
 				break;
 			}
 			key=NONE;
@@ -457,35 +351,12 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		paintUpdate(g);	
 	}
 
-	///////////////////////////////////////
-	// process key input
-	///////////////////////////////////////
 	public void keyPressed(KeyEvent e)
 	{
 		switch (e.getKeyCode())
 		{
-		case KeyEvent.VK_RIGHT:
-		case KeyEvent.VK_L:
-			pacKeyDir=Utility.RIGHT;
-			// e.consume();
-			break;
 		case KeyEvent.VK_UP:
-			pacKeyDir=Utility.UP;
-			// e.consume();
-			break;
-		case KeyEvent.VK_LEFT:
-			pacKeyDir=Utility.LEFT;
-			// e.consume();
-			break;
-		case KeyEvent.VK_DOWN:
-			pacKeyDir=Utility.DOWN;
-			// e.consume();
-			break;
-		case KeyEvent.VK_S:
-			key=SUSPEND;
-			break;
-		case KeyEvent.VK_B:
-			key=BOSS;
+			KeyPressed=Utility.UP;
 			break;
 		}
 	}
@@ -493,20 +364,11 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	public void keyTyped(KeyEvent e) {}
 	public void keyReleased(KeyEvent e) {}
 
-	/////////////////////////////////////////////////
-	// handles menu event
-	/////////////////////////////////////////////////
 	public void actionPerformed(ActionEvent e)
 	{
-		if (gameState==RUNNING)
-			key=SUSPEND;
 		new AboutWindow(this);
-		// e.consume();
 	}
 
-	///////////////////////////////////////////////////
-	// handles window event
-	///////////////////////////////////////////////////
 	public void windowOpened(WindowEvent e)
 	{}
 
@@ -530,9 +392,6 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	public void windowDeactivated(WindowEvent e)
 	{}
 
-	/////////////////////////////////////////////////
-	// the timer
-	/////////////////////////////////////////////////
 	public void run()
 	{
 		while (true)
@@ -548,29 +407,22 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		}
 	}
 
-	// for applet the check state
 	boolean finalized=false;
 
 	public void dispose()
 	{
-		//      timer.stop();	// deprecated
-		// kill the thread
 		timer.interrupt();
 
-		// the off screen canvas
-//		Image offScreen=null;
 		offScreenG.dispose();
 		offScreenG=null;
 
-		// the objects    
-		maze=null;
-		pac=null;
-		powerDot=null;
-		for (int i=0; i<4; i++)
-			ghosts[i]=null;
-		ghosts=null;
+		map=null;
+		items=null;
 
-		// score images
+		butlers=null;
+		IdleButlers=null;
+		NonIdleButlers=null;
+
 		imgScore=null;
 		imgHiScore=null;
 		imgScoreG.dispose();
@@ -578,7 +430,6 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		imgHiScoreG.dispose();
 		imgHiScoreG=null;
 
-		// GUIs
 		menuBar=null;
 		help=null;
 		about=null;

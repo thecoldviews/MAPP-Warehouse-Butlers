@@ -1,6 +1,0 @@
-versions
-
-version 1.0
-- the game works fine.
-- the computer controlled auto play of the pac feature is work in progress and does not work properly.
- 

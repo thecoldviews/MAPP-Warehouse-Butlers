@@ -3,7 +3,11 @@
  */
 package com.ai.major;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Window;
+import java.util.ArrayList;
 
 /* define the maze */
 public class Map
@@ -11,12 +15,16 @@ public class Map
 	// constant definitions
 	static final int BLANK=0;
 	static final int WALL=1;
-	static final int DOOR=2;
-	static final int DOT=4;
-	static final int POWER_DOT=8;
+	static final int WSDOOR=2;
+	static final int BELTDOOR=3;
+	static final int WORKSTATION=4;
+	static final int ITEM=8;
 
 	static final int HEIGHT=16;
 	static final int WIDTH=21;
+	
+	int wsX;
+	int wsY;
 
 	static final int iHeight=HEIGHT*16;
 	static final int iWidth=WIDTH*16;
@@ -38,7 +46,10 @@ public class Map
 	// the status of maze
 	int[][] iMaze;
 	
+	ArrayList<Item> items;
+	
 	Warehouse warehouse;
+
 
 	// initialize the maze
 	Map(Window a, Graphics g, Warehouse warehouse)
@@ -49,8 +60,7 @@ public class Map
 		this.warehouse=warehouse;
 		imageMaze=applet.createImage(iWidth, iHeight);
 		imageDot=applet.createImage(2,2);
-
-		// create data
+		items=new ArrayList<Item>();
 		iMaze=new int[HEIGHT][WIDTH];
 	}
 
@@ -69,19 +79,20 @@ public class Map
 				case 'X':
 					k=WALL;
 					break;
-				case '.':
-					k=DOT;
-					iTotalDotcount++;
-					break;
 				case 'O':
-					k=POWER_DOT;
+					k=ITEM;
 					break;
 				case '-':
-					k=DOOR;
+					k=WSDOOR;
+					break;
+				case '*':
+					k=BELTDOOR;
+					break;
+				case 'W':
+					k=WORKSTATION;
 					break;
 				default:
-					k=DOT;
-					iTotalDotcount++;
+					k=BLANK;
 					break;
 				}
 				iMaze[i][j]=k;
@@ -93,26 +104,14 @@ public class Map
 	public void draw()
 	{
 		graphics.drawImage(imageMaze,0,0,applet);
-		drawDots();
 	}
-
-	void drawDots()	// on the offscreen
-	{
-		int i,j;
-
-		for (i=0; i<HEIGHT; i++)
-			for (j=0; j<WIDTH; j++)
-			{
-				if (iMaze[i][j]==DOT)
-					graphics.drawImage(imageDot, j*16+7,i*16+7,applet);
-			}
+	
+	public ArrayList<Item> getItems(){
+		return items;
 	}
 
 	void createImage()
 	{
-		// create the image of a dot
-		Visuals.drawDot(imageDot);
-
 		// create the image of the maze
 		Graphics gmaze=imageMaze.getGraphics();
 
@@ -123,12 +122,14 @@ public class Map
 		DrawWall(gmaze);
 	}
 
-	public void DrawDot(int icol, int iRow)
-	{
-		if (iMaze[iRow][icol]==DOT)
-			graphics.drawImage(imageDot, icol*16+7,iRow*16+7,applet);
-	}	
-
+	int getWSX(){
+		return wsX;
+	}
+	
+	int getWSY(){
+		return wsY;
+	}
+	
 	void DrawWall(Graphics g)
 	{
 		int i,j;
@@ -140,13 +141,28 @@ public class Map
 		{
 			for (j=0; j<WIDTH; j++)
 			{
+				if (iMaze[i][j]==WSDOOR)
+				{
+					g.drawLine(j*16,i*16+8,j*16+16,i*16+8);
+					continue;
+				}
+				if (iMaze[i][j]==BELTDOOR)
+				{	
+					g.setColor(Color.red);
+					g.drawLine(j*16,i*16+8,j*16+16,i*16+8);
+					g.setColor(Color.green);
+					continue;
+				}
+				if(iMaze[i][j]==ITEM){
+					items.add(new Item(applet, graphics,j,i));
+				}
+				if(iMaze[i][j]==WORKSTATION){
+					wsX=j;
+					wsY=i;
+				}
 				for (iDir=Utility.RIGHT; iDir<=Utility.DOWN; iDir++)
 				{
-					if (iMaze[i][j]==DOOR)
-					{
-						g.drawLine(j*16,i*16+8,j*16+16,i*16+8);
-						continue;
-					}
+					
 					if (iMaze[i][j]!=WALL)	continue;
 					switch (iDir)
 					{

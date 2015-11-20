@@ -13,20 +13,20 @@ public class Warehouse1 extends Warehouse
 		String[] MazeDefine2=
 			{
 				"XXXXXXXXXXXXXXXXXXXXX",	// 1
-				"X.........X.........X",	// 2
-				"XOXXX.XXX.X.XXX.XXXOX",	// 3
-				"X......X..X.........X",	// 4
-				"XXX.XX.X.XXX.XX.X.X.X",	// 5
-				"X....X..........X.X.X",	// 6
-				"X.XX.X.XXX-XXX.XX.X.X",	// 7
-				"X.XX.X.X     X......X",	// 8
-				"X.XX...X     X.XXXX.X",	// 9
-				"X.XX.X.XXXXXXX.XXXX.X",	// 10
-				"X....X.... .........X",	// 11
-				"XXX.XX.XXXXXXX.X.X.XX",	// 12
-				"X.........X....X....X",	// 13
-				"XOXXXXXXX.X.XXXXXXXOX",	// 14
-				"X...................X",	// 15
+				"X                   X",	// 2
+				"X  X  X  X OX  X  X X",	// 3
+				"X  X  X  X  X  X  X X",	// 4
+				"X  X  X  X  X  X  X X",	// 5
+				"X  X  X  X  X  X  X X",	// 6
+				"X  X  X OX  X  X  X X",	// 7
+				"X  X  X  X  X  X  X X",	// 8
+				"X  X  X  X  X  X  X X",	// 9
+				"X  X  X  X  X  X  X X",	// 10
+				"X                   X",	// 11
+				"X              O    X",	// 12
+				"X                   X",	// 13
+				"X-X               X*X",	// 14
+				"XWX               X X",	// 15
 				"XXXXXXXXXXXXXXXXXXXXX",	// 16
 			};
 		this.MazeDefine=MazeDefine2;

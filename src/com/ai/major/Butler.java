@@ -7,121 +7,101 @@ import java.lang.Error;
 import com.ai.major.Utility;
 import java.awt.*;
 
-public class Agent
+public class Butler
 {
-	final int IN=0;
-	final int OUT=1;
-	final int BLIND=2;
-	final int EYE=3;
+	final int IDLE=0;
+	final int FETCH=1;
+	final int DELIVER=2;
+	final int RETURN=3;
 
 	final int[] steps=	{7, 7, 1, 1};
 	final int[] frames=	{8, 8, 2, 1};
 
-	final int INIT_BLIND_COUNT=600;	// remain blind for ??? frames
-	int blindCount;
-
+	Item assignment;
+	
 	SpeedControl speed=new SpeedControl();
 
 	int iX, iY, iDir, iStatus;
 	int iBlink, iBlindCount;
 
-	// random calculation factors
 	final int DIR_FACTOR=2;
 	final int POS_FACTOR=10;
 
-	// the applet this object is associated to
 	Window applet;
 	Graphics graphics;
 
-	// the maze the ghosts knows
 	Map maze;
 
-	// the ghost image
-	Image imageGhost; 
-	Image imageBlind;
-	Image imageEye;
-
-	Agent(Window a, Graphics g, Map m, Color color)
+	Image imageIdle;
+	Image imageOnDuty;
+	
+	Color color;
+	
+	//INITIALIZE
+	Butler(Window a, Graphics g, Map m, Color color)
 	{
 		applet=a;
 		graphics=g;
 		maze=m;
 
-		imageGhost=applet.createImage(18,18);
-		Visuals.drawGhost(imageGhost, 0, color);
+		this.color=color;
+		
+		imageOnDuty=applet.createImage(18,18);
 
-		imageBlind=applet.createImage(18,18);
-		Visuals.drawGhost(imageBlind,1, Color.white);
-
-		imageEye=applet.createImage(18,18);
-		Visuals.drawGhost(imageEye,2, Color.lightGray);
+		imageIdle=applet.createImage(18,18);
+		Visuals.drawButler(imageIdle,1, Color.white);
+		
+		Visuals.drawButler(imageOnDuty,1, color);
+		
+		assignment=null;
 	}
 
-	public void start(int initialPosition, int round)
+	//PLACE BUTLER
+	public void start(int X ,int Y, Item assignment)
 	{
-		if (initialPosition>=2)
-			initialPosition++;
-		iX=(8+initialPosition)*16; iY=8*16;
+		iX=Y; iY=X;
 		iDir=3;
-		iStatus=IN;
-
-		blindCount=INIT_BLIND_COUNT/((round+1)/2);
-
+		iStatus=FETCH;
+		this.assignment=assignment;
+		this.assignment.inBound(this);
 		speed.start(steps[iStatus], frames[iStatus]);
 	}
 
+	//
 	public void draw()
 	{
-		maze.DrawDot(iX/16, iY/16);
-		maze.DrawDot(iX/16+(iX%16>0?1:0), iY/16+(iY%16>0?1:0));
-
-		if (iStatus==BLIND && iBlink==1 && iBlindCount%32<16)
-			graphics.drawImage(imageGhost, iX-1, iY-1, applet);
-		else if (iStatus==OUT || iStatus==IN)
-			graphics.drawImage(imageGhost, iX-1, iY-1, applet);
-		else if (iStatus==BLIND)
-			graphics.drawImage(imageBlind, iX-1, iY-1, applet);
-		else 
-			graphics.drawImage(imageEye, iX-1, iY-1, applet);
+		if (iStatus==IDLE || iStatus==RETURN || iStatus==DELIVER)
+			graphics.drawImage(imageIdle, iX-1, iY-1, applet);
+		else if (iStatus==FETCH)
+			graphics.drawImage(imageOnDuty, iX-1, iY-1, applet);
 	}  
 
-	public void move(int iPacX, int iPacY, int iPacDir)
+	//MAKE A MOVE ACCORDING TO STATUS
+	public void move()
 	{
-		if (iStatus==BLIND)
-		{
-			iBlindCount--;
-			if (iBlindCount<blindCount/3)
-				iBlink=1;
-			if (iBlindCount==0)
-				iStatus=OUT;
-			if (iBlindCount%2==1)	// blind moves at 1/2 speed
-			return;
-		}
-
 		if (speed.isMove()==0)
 			// no move
 			return;
 
 		if (iX%16==0 && iY%16==0)
-			// determine direction
 		{
 			switch (iStatus)
 			{
-			case IN:
-				iDir=INSelect();
+			case IDLE:
+				iDir=IdleSelect();
 				break;
-			case OUT:
-				iDir=OUTSelect(iPacX, iPacY, iPacDir);
+			case FETCH:
+				iDir=ItemDirectionSelect(0,0,0);
 				break;
-			case BLIND:
-				iDir=BLINDSelect(iPacX, iPacY, iPacDir);
+			case DELIVER:
+				iDir=BeltDirectionSelect(0,0,0);
 				break;
-			case EYE:
-				iDir=EYESelect();
+			case RETURN:
+				iDir=ReturnDirectionSelect(0,0,0);
 			}
 		}
 
-		if (iStatus!=EYE)
+		if (iStatus!=DELIVER)
 		{
 			iX+= Utility.iXDirection[iDir];
 			iY+= Utility.iYDirection[iDir];
@@ -133,8 +113,9 @@ public class Agent
 		}
 
 	}
-
-	public int INSelect()
+	
+	//STAY STILL
+	public int IdleSelect()
 	// count available directions
 	throws Error
 	{
@@ -167,8 +148,8 @@ public class Agent
 					if (iRand<0)
 						// the right selection
 					{
-						if (iM== Map.DOOR)
-							iStatus=OUT;
+						if (iM== Map.WSDOOR)
+							iStatus=FETCH;
 						iDir=i;	break;
 					}
 				}
@@ -177,7 +158,8 @@ public class Agent
 		return(iDir);	
 	}
 
-	public int OUTSelect(int iPacX, int iPacY, int iPacDir)
+	//RETURN TO WORKSTATION
+	public int ReturnDirectionSelect(int iPacX, int iPacY, int iPacDir)
 	// count available directions
 	throws Error
 	{
@@ -190,7 +172,7 @@ public class Agent
 			iDirCount[i]=0;
 			iM=maze.iMaze[iY/16 + Utility.iYDirection[i]]
 			              [iX/16+ Utility.iXDirection[i]];
-			if (iM!=Map.WALL && i!= Utility.iBack[iDir] && iM!= Map.DOOR )
+			if (iM!=Map.WALL && i!= Utility.iBack[iDir] && iM!= Map.WSDOOR )
 				// door is not accessible for OUT
 			{
 				iDirCount[i]++;
@@ -228,7 +210,7 @@ public class Agent
 			{
 				iM=maze.iMaze[iY/16+ Utility.iYDirection[i]]
 				              [iX/16+ Utility.iXDirection[i]];
-				if (iM!=Map.WALL && i!= Utility.iBack[iDir] && iM!= Map.DOOR )
+				if (iM!=Map.WALL && i!= Utility.iBack[iDir] && iM!= Map.WSDOOR )
 				{	
 					iRand-=iDirCount[i];
 					if (iRand<0)
@@ -245,31 +227,16 @@ public class Agent
 		return(iDir);
 	}
 
-	public void blind()
+	public void checkStatus()
 	{
-		if (iStatus==BLIND || iStatus==OUT)
+		if (iStatus==DELIVER || iStatus==FETCH)
 		{
-			iStatus=BLIND;
-			iBlindCount=blindCount;
-			iBlink=0;
-			// reverse
-			if (iX%16!=0 || iY%16!=0)
-			{
-				iDir= Utility.iBack[iDir];
-				// a special condition:
-				// when ghost is leaving home, it can not go back
-				// while becoming blind
-				int iM;
-				iM=maze.iMaze[iY/16+ Utility.iYDirection[iDir]]
-				              [iX/16+ Utility.iXDirection[iDir]];
-				if (iM == Map.DOOR)
-					iDir=Utility.iBack[iDir];
-			}
+			iStatus=DELIVER;
 		}
 	}
 
-	public int EYESelect()
-	// count available directions
+	//GO AFTER ITEM
+	public int ItemDirectionSelect(int q,int w, int e)
 	throws Error
 	{
 		int iM,i,iRand;
@@ -324,8 +291,8 @@ public class Agent
 					if (iRand<0)
 						// the right selection
 					{
-						if (iM== Map.DOOR)
-							iStatus=IN;
+						if (iM== Map.WSDOOR)
+							iStatus=IDLE;
 						iDir=i;	break;
 					}
 				}
@@ -336,7 +303,8 @@ public class Agent
 		return(iDir);	
 	}	
 
-	public int BLINDSelect(int iPacX, int iPacY, int iPacDir)
+	//GO TOWARDS CONVEYOR BELT
+	public int BeltDirectionSelect(int iPacX, int iPacY, int iPacDir)
 	// count available directions
 	throws Error
 	{
@@ -348,7 +316,7 @@ public class Agent
 		{
 			iDirCount[i]=0;
 			iM=maze.iMaze[iY/16+ Utility.iYDirection[i]][iX/16+ Utility.iXDirection[i]];
-			if (iM != Map.WALL && i != Utility.iBack[iDir] && iM != Map.DOOR)
+			if (iM != Map.WALL && i != Utility.iBack[iDir] && iM != Map.WSDOOR)
 				// door is not accessible for OUT
 			{
 				iDirCount[i]++;
@@ -403,27 +371,6 @@ public class Agent
 		return(iDir);
 	}
 
-	// return 1 if caught the pac!
-	// return 2 if being caught by pac
-	int testCollision(int iPacX, int iPacY)
-	{
-		if (iX<=iPacX+2 && iX>=iPacX-2
-				&& iY<=iPacY+2 && iY>=iPacY-2)
-		{
-			switch (iStatus)
-			{
-			case OUT:
-				return(1);
-			case BLIND:
-				iStatus=EYE;
-				iX=iX/4*4;
-				iY=iY/4*4;
-				return(2);
-			}	
-		}
-		// nothing
-		return(0);
-	}
 }
 
 

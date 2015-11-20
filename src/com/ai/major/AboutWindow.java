@@ -10,6 +10,10 @@ import java.awt.event.*;
 class AboutWindow extends Window
 implements MouseListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	final String[] about = {
 			"",
 			"MAPP: Warehouse Butlers",

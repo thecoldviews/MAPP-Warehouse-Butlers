@@ -3,13 +3,16 @@
  */
 package com.ai.major;
 
+import java.awt.Color;
 
 /**
  * provide some global public utility functions
  */
 public class Utility
 {
+	public static final Color[] ColorArray={Color.BLUE,Color.CYAN,Color.GREEN,Color.MAGENTA,Color.ORANGE,Color.PINK,Color.RED,Color.YELLOW};
 	// for direction computation
+	public static final int numButlers = 8;
 	public static final int[] iXDirection={1,0,-1,0};
 	public static final int[] iYDirection={0,-1,0,1};
 	public static final int[] iDirection={
@@ -35,14 +38,12 @@ public class Utility
 	public static final int DOWN=3;
 	
 	public static int RandDo(int iOdds)
-		// see if it happens within a probability of 1/odds
 	{
 		if ( Math.random()*iOdds < 1 )
 			return(1);
 		return(0);
 	}	
 
-	// return a random number within [0..iTotal)
 	public static int RandSelect(int iTotal)
 	{
 		double a;
