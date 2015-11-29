@@ -1,0 +1,307 @@
+/* 
+ * @author Sarthak Ahuja
+ */
+package com.ai.major;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Window;
+import java.util.ArrayList;
+
+public class Butler
+{
+	final int IDLE=0;
+	final int FETCH=1;
+	final int DELIVER=2;
+	final int RETURN=3;
+
+	Item assignment;
+	
+	SpeedControl speed=new SpeedControl();
+
+	Position currentPosition;
+	Position nextPosition;
+	int iStatus;
+	int iBlink, iBlindCount;
+
+	final int DIR_FACTOR=2;
+	final int POS_FACTOR=10;
+
+	Window applet;
+	Graphics graphics;
+	
+	ArrayList<Position> path;
+
+	Map maze;
+
+	Image imageIdle;
+	Image imageOnDuty;
+	
+	Color color;
+	
+	//INITIALIZE
+	Butler(Window a, Graphics g, Map m, Color color)
+	{
+		applet=a;
+		graphics=g;
+		maze=m;
+
+		this.color=color;
+		
+		imageOnDuty=applet.createImage(18,18);
+
+		imageIdle=applet.createImage(18,18);
+		Visuals.drawButler(imageIdle,1, Color.white);
+		
+		Visuals.drawButler(imageOnDuty,1, color);
+		
+		assignment=null;
+	}
+
+	//PLACE BUTLER
+	public void start(int X ,int Y, Item assignment)
+	{
+		currentPosition.x=X;
+		currentPosition.y=Y;
+		
+		//iX=Y*16; iY=X*16;
+		//iDir=3;
+		iStatus=FETCH;
+		this.assignment=assignment;
+		this.assignment.inBound(this);
+	}
+
+	//DRAW THE BUTLER
+	public void draw()
+	{
+		if (iStatus==IDLE || iStatus==RETURN || iStatus==DELIVER)
+			graphics.drawImage(imageIdle, currentPosition.getPixelX()-1, currentPosition.getPixelY()-1, applet);
+		else if (iStatus==FETCH)
+			graphics.drawImage(imageOnDuty, currentPosition.getPixelX()-1, currentPosition.getPixelY()-1, applet);
+	}  
+
+	//MAKE A MOVE ACCORDING TO STATUS
+	public void move()
+	{
+		if (speed.isMove()==0)
+			// no move
+			return;
+
+		if (currentPosition.getPixelX()%16==0 && currentPosition.getPixelY()%16==0)
+		{
+			switch (iStatus)
+			{
+			case IDLE:
+				nextPosition=IdleSelect();
+				nextPosition=IdleSelect();
+				break;
+			case FETCH:
+				//nextPosition=ItemDirectionSelect();
+				nextPosition=IdleSelect();
+				break;
+			case DELIVER:
+				//nextPosition=BeltDirectionSelect();
+				nextPosition=IdleSelect();
+				break;
+			case RETURN:
+				//nextPosition=ReturnDirectionSelect();
+				nextPosition=IdleSelect();
+			}
+		}
+
+		currentPosition=nextPosition;
+		System.out.println(currentPosition.getPixelX()/16+" "+currentPosition.getPixelY()/16);
+	}
+	
+	//STAY STILL
+	public Position IdleSelect()
+	// count available directions
+	throws Error
+	{
+		int iM,i,iRand;
+		int iDirTotal=0;
+
+		for (i=0; i<4; i++)
+		{
+			iM=maze.environment[currentPosition.getPixelY()/16 + Utility.iYDirection[i]]
+			              [currentPosition.getPixelX()/16 + Utility.iXDirection[i]].getType();
+			if (iM!=Map.WALL && i != Utility.iBack[nextPosition] )
+			{
+				iDirTotal++;
+			}
+		}
+		// randomly select a direction
+		if (iDirTotal!=0)
+		{
+			iRand=Utility.RandSelect(iDirTotal);
+			if (iRand>=iDirTotal)
+				throw new Error("iRand out of range");
+			//				exit(2);
+			for (i=0; i<4; i++)
+			{
+				iM=maze.environment[currentPosition.getPixelY()/16+ Utility.iYDirection[i]]
+				              [currentPosition.getPixelX()/16+ Utility.iXDirection[i]].getType();
+				if (iM!=Map.WALL && i != Utility.iBack[nextPosition] )
+				{
+					iRand--;
+					if (iRand<0)
+						// the right selection
+					{
+						if (iM== Map.WSDOOR)
+							iStatus=FETCH;
+						nextPosition=i;	break;
+					}
+				}
+			}
+		}	
+		return(nextPosition);	
+	}
+
+
+	public void checkStatus()
+	{
+		if (iStatus==DELIVER || iStatus==FETCH)
+		{
+			iStatus=DELIVER;
+		}
+	}
+
+	//GO AFTER ITEM
+	public int ItemDirectionSelect(int q,int w, int e)
+	throws Error
+	{
+		int iM,i,iRand;
+		int iDirTotal=0;
+		int [] iDirCount= new int [4];
+
+		for (i=0; i<4; i++)
+		{
+			iDirCount[i]=0;
+			iM=maze.environment[currentPosition.getPixelY()/16 + Utility.iYDirection[i]]
+			              [currentPosition.getPixelX()/16+Utility.iXDirection[i]].getType();
+			if (iM!= Map.WALL && i!= Utility.iBack[nextPosition])
+			{
+				iDirCount[i]++;
+				switch (i)
+				{
+				case 0:	// right
+					iDirCount[i]+=160>currentPosition.getPixelX()?
+							POS_FACTOR:0;
+					break;
+				case 1:	// up
+					iDirCount[i]+=96<currentPosition.getPixelY()?
+							POS_FACTOR:0;
+					break;
+				case 2:	// left
+					iDirCount[i]+=160<currentPosition.getPixelX()?
+							POS_FACTOR:0;
+					break;
+				case 3:	// down
+					iDirCount[i]+=96>currentPosition.getPixelY()?
+							POS_FACTOR:0;
+					break;
+				}
+				iDirTotal+=iDirCount[i];
+			}	
+		}
+		// randomly select a direction
+		if (iDirTotal!=0)
+		{
+			iRand= Utility.RandSelect(iDirTotal);
+			if (iRand>=iDirTotal)
+				throw new Error("RandSelect out of range");
+			//				exit(2);
+			for (i=0; i<4; i++)
+			{
+				iM=maze.environment[currentPosition.getPixelY()/16+ Utility.iYDirection[i]]
+				              [currentPosition.getPixelX()/16+ Utility.iXDirection[i]].getType();
+				if (iM!= Map.WALL && i!= Utility.iBack[nextPosition])
+				{
+					iRand-=iDirCount[i];
+					if (iRand<0)
+						// the right selection
+					{
+						if (iM== Map.WSDOOR)
+							iStatus=IDLE;
+						nextPosition=i;	break;
+					}
+				}
+			}
+		}
+		else
+			throw new Error("iDirTotal out of range");
+		return(nextPosition);	
+	}	
+
+	//GO TOWARDS CONVEYOR BELT
+	public int BeltDirectionSelect(int iPacX, int iPacY, int iPacDir)
+	// count available directions
+	throws Error
+	{
+		int iM,i,iRand;
+		int iDirTotal=0;
+		int [] iDirCount = new int [4];
+
+		for (i=0; i<4; i++)
+		{
+			iDirCount[i]=0;
+			iM=maze.environment[currentPosition.getPixelY()/16+ Utility.iYDirection[i]][currentPosition.getPixelX()/16+ Utility.iXDirection[i]].getType();
+			if (iM != Map.WALL && i != Utility.iBack[nextPosition] && iM != Map.WSDOOR)
+				// door is not accessible for OUT
+			{
+				iDirCount[i]++;
+				iDirCount[i]+=nextPosition==iPacDir?
+						DIR_FACTOR:0;
+				switch (i)
+				{
+				case 0:	// right
+					iDirCount[i]+=iPacX<currentPosition.getPixelX()?
+							POS_FACTOR:0;
+					break;
+				case 1:	// up
+					iDirCount[i]+=iPacY>currentPosition.getPixelY()?
+							POS_FACTOR:0;
+					break;
+				case 2:	// left
+					iDirCount[i]+=iPacX>currentPosition.getPixelX()?
+							POS_FACTOR:0;
+					break;
+				case 3:	// down
+					iDirCount[i]+=iPacY<currentPosition.getPixelY()?
+							POS_FACTOR:0;
+					break;
+				}
+				iDirTotal+=iDirCount[i];
+			}	
+		}
+		// randomly select a direction
+		if (iDirTotal!=0)
+		{
+			iRand=Utility.RandSelect(iDirTotal);
+			if (iRand>=iDirTotal)
+				throw new Error("RandSelect out of range");
+			//				exit(2);
+			for (i=0; i<4; i++)
+			{	
+				iM=maze.environment[currentPosition.getPixelY()/16+ Utility.iYDirection[i]]
+				              [currentPosition.getPixelX()/16+ Utility.iXDirection[i]].getType();
+				if (iM!= Map.WALL && i!= Utility.iBack[nextPosition])
+				{	
+					iRand-=iDirCount[i];
+					if (iRand<0)
+						// the right selection
+					{
+						nextPosition=i;	break;
+					}
+				}
+			}
+		}
+		else
+			throw new Error("iDirTotal out of range");
+		return(nextPosition);
+	}
+
+}
+
+

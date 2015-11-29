@@ -60,6 +60,8 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	// the objects    
 	Map map;
 	ArrayList<Item> items;
+	ArrayList<Position> workstations;
+	ArrayList<Position> conveyorbelts;
 	ArrayList<Butler> butlers;
 	Set<Butler> IdleButlers;
 	Set<Butler> NonIdleButlers;
@@ -114,6 +116,8 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		initGUI();
 		
 		items = new ArrayList<Item>();
+		workstations = new ArrayList<Position>();
+		conveyorbelts = new ArrayList<Position>();
 		butlers = new ArrayList<Butler>();
 		IdleButlers = new HashSet<Butler>();
 		NonIdleButlers = new HashSet<Butler>();
@@ -159,6 +163,8 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		
 		//GET ITEMS ON THE MAP
 		items = map.getItems();
+		workstations = map.getWS();
+		conveyorbelts = map.getGS();
 		
 		//INITIALIZE BUTLERS
 		for (int i=0; i<Utility.numButlers; i++)
@@ -228,11 +234,20 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		for (int i=0; i<items.size(); i++){
 			IdleButlers.remove(butlers.get(i));
 			NonIdleButlers.add(butlers.get(i));
-			butlers.get(i).start(map.getWSX(),map.getWSY(),items.get(i));
-			for(int j=0;j<16;j++){
-				move();
+			ArrayList<Position> positionlist=new ArrayList<Position>();
+			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()]);
+			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+1]);
+			positionlist.add(map.environment[workstations.get(i).getRow()+1][workstations.get(i).getColumn()]);
+			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+3]);
+			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+4]);
+			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+5]);
+			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+6]);
+			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+7]);
+			System.out.println(positionlist.size());
+			butlers.get(i).start(positionlist,items.get(i));
+			for(int j=0;j<4;j++){
+				System.out.println(positionlist.get(j).getRow()+" "+positionlist.get(j).getColumn());
 			}
-			
 		}
 	}
 
@@ -425,6 +440,8 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 		map=null;
 		items=null;
+		workstations=null;
+		conveyorbelts=null;
 
 		butlers=null;
 		IdleButlers=null;

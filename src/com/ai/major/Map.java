@@ -9,6 +9,8 @@ import java.awt.Image;
 import java.awt.Window;
 import java.util.ArrayList;
 
+import javafx.geometry.Pos;
+
 /* define the maze */
 public class Map
 {
@@ -24,11 +26,8 @@ public class Map
 	static final int HEIGHT=16;
 	static final int WIDTH=21;
 	
-	int wsX;
-	int wsY;
-	
-	int gX;
-	int gY;
+	ArrayList<Position> ws;
+	ArrayList<Position> gs;
 
 	static final int iHeight=HEIGHT*16;
 	static final int iWidth=WIDTH*16;
@@ -48,7 +47,7 @@ public class Map
 	int iTotalDotcount;
 
 	// the status of maze
-	int[][] iMaze;
+	Position[][] environment;
 	
 	ArrayList<Item> items;
 	
@@ -65,7 +64,17 @@ public class Map
 		imageMaze=applet.createImage(iWidth, iHeight);
 		imageDot=applet.createImage(2,2);
 		items=new ArrayList<Item>();
-		iMaze=new int[HEIGHT][WIDTH];
+		ws=new ArrayList<Position>();
+		gs=new ArrayList<Position>();
+		environment=new Position[HEIGHT][WIDTH];
+		for (int i =0; i<HEIGHT;i++)
+			for (int j =0;j<WIDTH;j++)
+			{
+				this.environment[i][j] = new Position();
+				this.environment[i][j].setColumn(i);
+				this.environment[i][j].setRow(j);
+				
+			}
 	}
 
 	public void start()
@@ -102,7 +111,7 @@ public class Map
 					k=BLANK;
 					break;
 				}
-				iMaze[i][j]=k;
+				environment[i][j].setType(k);
 			}
 		// create initial maze image
 		createImage();	
@@ -129,20 +138,12 @@ public class Map
 		DrawWall(gmaze);
 	}
 
-	int getWSX(){
-		return wsX;
+	ArrayList<Position> getWS(){
+		return ws;
 	}
 	
-	int getWSY(){
-		return wsY;
-	}
-	
-	int getGX(){
-		return gX;
-	}
-	
-	int getGY(){
-		return gY;
+	ArrayList<Position> getGS(){
+		return gs;
 	}
 	
 	void DrawWall(Graphics g)
@@ -156,56 +157,56 @@ public class Map
 		{
 			for (j=0; j<WIDTH; j++)
 			{
-				if (iMaze[i][j]==WSDOOR)
+				if (environment[i][j].getType()==WSDOOR)
 				{
 					g.drawLine(j*16,i*16+8,j*16+16,i*16+8);
 					continue;
 				}
-				if (iMaze[i][j]==BELTDOOR)
+				if (environment[i][j].getType()==BELTDOOR)
 				{	
 					g.setColor(Color.red);
 					g.drawLine(j*16,i*16+8,j*16+16,i*16+8);
 					g.setColor(Color.green);
 					continue;
 				}
-				if(iMaze[i][j]==ITEM){
-					items.add(new Item(applet, graphics,j,i));
+				if(environment[i][j].getType()==ITEM){
+					System.out.println(i);
+					System.out.println(j);
+					items.add(new Item(applet, graphics,environment[i][j]));
 				}
-				if(iMaze[i][j]==WORKSTATION){
-					wsY=j;
-					wsX=i;
+				if(environment[i][j].getType()==WORKSTATION){
+					ws.add(new Position(i,j));
 				}
-				if(iMaze[i][j]==BELT){
-					gY=j;
-					gX=i;
+				if(environment[i][j].getType()==BELT){
+					gs.add(new Position(i,j));
 				}
 				for (iDir=Utility.RIGHT; iDir<=Utility.DOWN; iDir++)
 				{
 					
-					if (iMaze[i][j]!=WALL)	continue;
+					if (environment[i][j].getType()!=WALL)	continue;
 					switch (iDir)
 					{
 					case Utility.UP:
 						if (i==0)	break;
-						if (iMaze[i-1][j]==WALL)
+						if (environment[i-1][j].getType()==WALL)
 							break;
 						DrawBoundary(g, j, i-1, Utility.DOWN);
 						break;
 					case Utility.RIGHT:
 						if (j==WIDTH-1)	break;
-						if (iMaze[i][j+1]==WALL)
+						if (environment[i][j+1].getType()==WALL)
 							break;
 						DrawBoundary(g, j+1,i, Utility.LEFT);
 						break;
 					case Utility.DOWN:
 						if (i==HEIGHT-1)	break;
-						if (iMaze[i+1][j]==WALL)
+						if (environment[i+1][j].getType()==WALL)
 							break;
 						DrawBoundary(g, j,i+1, Utility.UP);
 						break;
 					case Utility.LEFT:
 						if (j==0)	break;
-						if (iMaze[i][j-1]==WALL)
+						if (environment[i][j-1].getType()==WALL)
 							break;
 						DrawBoundary(g, j-1,i, Utility.RIGHT);
 						break;
@@ -226,9 +227,9 @@ public class Map
 		{
 		case Utility.LEFT:
 			// draw lower half segment 
-			if (iMaze[row+1][col]!=WALL)
+			if (environment[row+1][col].getType()!=WALL)
 				// down empty
-				if (iMaze[row+1][col-1]!=WALL)
+				if (environment[row+1][col-1].getType()!=WALL)
 					// left-down empty
 				{
 					//arc(x-8,y+8,270,0,6);
@@ -245,9 +246,9 @@ public class Map
 			}
 
 			// Draw upper half segment
-			if (iMaze[row-1][col]!=WALL)
+			if (environment[row-1][col].getType()!=WALL)
 				// upper empty
-				if (iMaze[row-1][col-1]!=WALL)
+				if (environment[row-1][col-1].getType()!=WALL)
 					// upper-left empty
 				{
 					//						arc(x-8,y+7,0,90,6);
@@ -266,9 +267,9 @@ public class Map
 
 		case Utility.RIGHT:
 			// draw lower half segment 
-			if (iMaze[row+1][col]!=WALL)
+			if (environment[row+1][col].getType()!=WALL)
 				// down empty
-				if (iMaze[row+1][col+1]!=WALL)
+				if (environment[row+1][col+1].getType()!=WALL)
 					// down-right empty
 				{
 					//						arc(x+16+7,y+8,180,270,6);
@@ -284,9 +285,9 @@ public class Map
 				g.drawLine(x+17,y+8,x+17,y+17);
 			}	
 			// Draw upper half segment 
-			if (iMaze[row-1][col]!=WALL)
+			if (environment[row-1][col].getType()!=WALL)
 				// upper empty
-				if (iMaze[row-1][col+1]!=WALL)
+				if (environment[row-1][col+1].getType()!=WALL)
 					// upper-right empty
 				{
 					//						arc(x+16+7,y+7,90,180,6);
@@ -305,9 +306,9 @@ public class Map
 
 		case Utility.UP:
 			// draw left half segment 
-			if (iMaze[row][col-1]!=WALL)
+			if (environment[row][col-1].getType()!=WALL)
 				// left empty
-				if (iMaze[row-1][col-1]!=WALL)
+				if (environment[row-1][col-1].getType()!=WALL)
 					// left-upper empty
 				{
 					//  arc(x+7,y-8,180,270,6);
@@ -319,9 +320,9 @@ public class Map
 				}
 
 			// Draw right half segment
-			if (iMaze[row][col+1]!=WALL)
+			if (environment[row][col+1].getType()!=WALL)
 				// right empty
-				if (iMaze[row-1][col+1]!=WALL)
+				if (environment[row-1][col+1].getType()!=WALL)
 					// right-upper empty
 				{
 					//						arc(x+8,y-8,270,0,6);
@@ -335,9 +336,9 @@ public class Map
 
 		case Utility.DOWN:
 			// draw left half segment
-			if (iMaze[row][col-1]!=WALL)
+			if (environment[row][col-1].getType()!=WALL)
 				// left empty
-				if (iMaze[row+1][col-1]!=WALL)
+				if (environment[row+1][col-1].getType()!=WALL)
 					// left-down empty
 				{
 					//						arc(x+7,y+16+7,90,180,6);
@@ -349,9 +350,9 @@ public class Map
 				}
 
 			// Draw right half segment
-			if (iMaze[row][col+1]!=WALL)
+			if (environment[row][col+1].getType()!=WALL)
 				// right empty
-				if (iMaze[row+1][col+1]!=WALL)
+				if (environment[row+1][col+1].getType()!=WALL)
 					// right-down empty
 				{
 					//						arc(x+8,y+16+7,0,90,6);

@@ -7,8 +7,7 @@ import java.awt.*;
 
 public class Item
 {
-	final int iX;
-	final int iY;
+	final Position position;
 
 	Color color;
 	
@@ -20,7 +19,6 @@ public class Item
 
 	int iValid;
 
-	// the applet this object is associated to
 	Window applet;
 	Graphics graphics;
 
@@ -33,19 +31,18 @@ public class Item
 	// the blank image
 	Image imageBlank;
 
-	Item(Window a, Graphics g, int iX,int iY)
+	Item(Window a, Graphics g, Position position)
 	{
 		applet=a;
 		graphics=g;
 		this.color=Color.yellow;
 		// initialize power dot	and image
 		iValid = 1;
-		this.iX=iX;
-		this.iY=iY;
-
+		this.position=position;
 		item_image=applet.createImage(16,16);
 		Visuals.drawItem(item_image,this.color);
 
+		System.out.println("YUHU");
 		imageBlank=applet.createImage(16,16);
 		Graphics imageG=imageBlank.getGraphics();
 		imageG.setColor(Color.black);
@@ -62,7 +59,8 @@ public class Item
 
 	void clear()
 	{
-		graphics.drawImage(imageBlank, iX*16, iY*16, applet);
+		System.out.println(position.getPixelRow()+"CLEAR"+position.getPixelColumn());
+		graphics.drawImage(imageBlank, position.getPixelColumn(), position.getPixelRow(), applet);
 	}
 
 	void inBound(Butler butler){
@@ -95,10 +93,14 @@ public class Item
 			}
 		}
 
-			if (iValid==1 && showStatus==1)
-				graphics.drawImage(item_image,iX*16, iY*16, applet);
-			else
-				graphics.drawImage(imageBlank,iX*16, iY*16, applet);
+			if (iValid==1 && showStatus==1){
+				System.out.println(position.getPixelRow()+"VALID"+position.getPixelColumn());
+				graphics.drawImage(item_image,position.getPixelRow(), position.getPixelColumn(), applet);
+			}
+			else{
+				System.out.println(position.getPixelRow()+"INVALID"+position.getPixelColumn());
+				graphics.drawImage(imageBlank,position.getPixelRow(), position.getPixelColumn(), applet);
+			}
 		
 	} 
 }

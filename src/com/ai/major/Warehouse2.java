@@ -25,8 +25,8 @@ public class Warehouse2 extends Warehouse
 				"X                   X",	// 11
 				"X                   X",	// 12
 				"X                   X",	// 13
-				"X-X               X*X",	// 14
-				"XWX               XGX",	// 15
+				"X                   X",	// 14
+				"XWW               GGX",	// 15
 				"XXXXXXXXXXXXXXXXXXXXX",	// 16
 			};
 		this.MazeDefine=MazeDefine2;
