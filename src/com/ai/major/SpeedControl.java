@@ -30,9 +30,6 @@ public class SpeedControl
 	public void start(int s, int f)
 	throws Error
 	{
-		if (f<s)
-			throw new Error("Cspeed.init(...): frame must >= step");
-
 		steps=s;
 		frames=f;
 		frameStepRatio=(float)frames/(float)steps;

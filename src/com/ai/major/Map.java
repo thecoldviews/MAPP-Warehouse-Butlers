@@ -18,6 +18,7 @@ public class Map
 	static final int WSDOOR=2;
 	static final int BELTDOOR=3;
 	static final int WORKSTATION=4;
+	static final int BELT=6;
 	static final int ITEM=8;
 
 	static final int HEIGHT=16;
@@ -25,6 +26,9 @@ public class Map
 	
 	int wsX;
 	int wsY;
+	
+	int gX;
+	int gY;
 
 	static final int iHeight=HEIGHT*16;
 	static final int iWidth=WIDTH*16;
@@ -91,6 +95,9 @@ public class Map
 				case 'W':
 					k=WORKSTATION;
 					break;
+				case 'G':
+					k=BELT;
+					break;
 				default:
 					k=BLANK;
 					break;
@@ -130,6 +137,14 @@ public class Map
 		return wsY;
 	}
 	
+	int getGX(){
+		return gX;
+	}
+	
+	int getGY(){
+		return gY;
+	}
+	
 	void DrawWall(Graphics g)
 	{
 		int i,j;
@@ -157,8 +172,12 @@ public class Map
 					items.add(new Item(applet, graphics,j,i));
 				}
 				if(iMaze[i][j]==WORKSTATION){
-					wsX=j;
-					wsY=i;
+					wsY=j;
+					wsX=i;
+				}
+				if(iMaze[i][j]==BELT){
+					gY=j;
+					gX=i;
 				}
 				for (iDir=Utility.RIGHT; iDir<=Utility.DOWN; iDir++)
 				{

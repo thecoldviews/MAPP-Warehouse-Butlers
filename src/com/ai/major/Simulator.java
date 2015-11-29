@@ -220,16 +220,20 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		}
 
 		map.draw();	
-
 		KeyPressed=Utility.DOWN;
-		
+		gameState=STARTWAIT;
+	}
+	
+	void start(){
 		for (int i=0; i<items.size(); i++){
 			IdleButlers.remove(butlers.get(i));
 			NonIdleButlers.add(butlers.get(i));
 			butlers.get(i).start(map.getWSX(),map.getWSY(),items.get(i));
+			for(int j=0;j<16;j++){
+				move();
+			}
+			
 		}
-		gameState=STARTWAIT;
-		wait=WAITCOUNT;
 	}
 
 	//PAINT EVERYTHING IN THE BEGINNING
@@ -336,10 +340,13 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 			switch (gameState)
 			{
 			case STARTWAIT: 
-				if (KeyPressed==Utility.UP)
+				if (KeyPressed==Utility.UP){
 					gameState=RUNNING;
-				else
+					start();
+				}
+				else{
 					return;
+				}
 				break;
 			case RUNNING:
 					move();

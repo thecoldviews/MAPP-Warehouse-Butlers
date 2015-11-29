@@ -14,9 +14,6 @@ public class Butler
 	final int DELIVER=2;
 	final int RETURN=3;
 
-	final int[] steps=	{7, 7, 1, 1};
-	final int[] frames=	{8, 8, 2, 1};
-
 	Item assignment;
 	
 	SpeedControl speed=new SpeedControl();
@@ -59,15 +56,14 @@ public class Butler
 	//PLACE BUTLER
 	public void start(int X ,int Y, Item assignment)
 	{
-		iX=Y; iY=X;
+		iX=Y*16; iY=X*16;
 		iDir=3;
 		iStatus=FETCH;
 		this.assignment=assignment;
 		this.assignment.inBound(this);
-		speed.start(steps[iStatus], frames[iStatus]);
 	}
 
-	//
+	//DRAW THE BUTLER
 	public void draw()
 	{
 		if (iStatus==IDLE || iStatus==RETURN || iStatus==DELIVER)
@@ -101,17 +97,9 @@ public class Butler
 			}
 		}
 
-		if (iStatus!=DELIVER)
-		{
-			iX+= Utility.iXDirection[iDir];
-			iY+= Utility.iYDirection[iDir];
-		}
-		else
-		{	
-			iX+=2* Utility.iXDirection[iDir];
-			iY+=2* Utility.iYDirection[iDir];
-		}
-
+		iX+= Utility.iXDirection[iDir];
+		iY+= Utility.iYDirection[iDir];
+		System.out.println(iX/16+" "+iY/16);
 	}
 	
 	//STAY STILL
@@ -253,7 +241,6 @@ public class Butler
 				iDirCount[i]++;
 				switch (i)
 				{
-				// door position 10,6
 				case 0:	// right
 					iDirCount[i]+=160>iX?
 							POS_FACTOR:0;
