@@ -1,5 +1,5 @@
 /* 
- * @author Sarthak Ahuja
+ * @author Sarthak Ahuja and Anchita Goel
  */
 package com.ai.major;
 

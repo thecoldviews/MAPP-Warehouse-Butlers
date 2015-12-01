@@ -1,9 +1,17 @@
+/* 
+ * @author Sarthak Ahuja and Anchita Goel
+ */
 package com.ai.major;
 
 public class Position {
+	int butlerTarget;
+	Butler butler;
 	int type;
 	int row;
 	int column;
+	boolean isItem;
+	boolean isWall;
+	boolean isButler;
 	int heuristicCost = 0;
 	int finalCost = 0;
 	Position parent = null;
@@ -11,6 +19,32 @@ public class Position {
 	public Position()
 	{
 		
+	}
+	
+	public boolean isOthersTarget(int butler)
+	{
+		return this.isItem && (this.butlerTarget!=butler);
+	}
+	
+	public boolean isOcuupied()
+	{
+		if (!isButler)
+		{
+			System.out.println("No butler at "+this);
+		}
+		return isWall || isButler ;
+		
+	}
+	
+	public Position(Position other)
+	{
+		this.butlerTarget = other.butlerTarget;
+		this.isItem = other.isItem;
+		this.isWall = other.isWall;
+		this.isButler = other.isButler;
+		this.butler = other.butler;
+		this.row = other.row;
+		this.column = other.column;
 	}
 	
 	public Position(int row,int column)
@@ -21,6 +55,15 @@ public class Position {
 	
 	public void setType(int type){
 		this.type=type;
+		switch (this.type){
+			case Map.WALL:
+				isWall=true;
+				break;
+			case Map.ITEM:
+				isItem=true;
+				break;
+		}
+				
 	}
 	
 	public int getType(){
@@ -92,8 +135,8 @@ public class Position {
         Position c = (Position) o;
          
         // Compare the data members and return accordingly 
-        return this.row == c.row
-                && this.column == c.column;
+        return this.getRow() == c.getRow()
+                && this.getColumn() == c.getColumn();
     }
 	
 	/*@Override 
@@ -105,7 +148,7 @@ public class Position {
 	@Override 
 	public String toString()
 	{
-		return this.row+","+this.column;
+		return this.getRow()+","+this.getColumn();
 		
 	}
 

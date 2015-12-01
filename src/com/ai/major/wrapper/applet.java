@@ -40,7 +40,7 @@ implements ActionListener
 	{
 		if ( simulator != null && ! simulator.isFinalized() )
 			return;
-		System.out.println(e.getSource());
+		//System.out.println(e.getSource());
 		if(e.getSource()==warehouse1){
 			simulator=new Simulator(new Warehouse1());
 		}

@@ -1,5 +1,5 @@
 /* 
- * @author Sarthak Ahuja
+ * @author Sarthak Ahuja and Anchita Goel
  */
 package com.ai.major;
 
@@ -42,7 +42,7 @@ public class Item
 		item_image=applet.createImage(16,16);
 		Visuals.drawItem(item_image,this.color);
 
-		System.out.println("YUHU");
+		//System.out.println("YUHU");
 		imageBlank=applet.createImage(16,16);
 		Graphics imageG=imageBlank.getGraphics();
 		imageG.setColor(Color.black);
@@ -59,7 +59,7 @@ public class Item
 
 	void clear()
 	{
-		System.out.println(position.getPixelRow()+"CLEAR"+position.getPixelColumn());
+		//System.out.println(position.getPixelRow()+"CLEAR"+position.getPixelColumn());
 		graphics.drawImage(imageBlank, position.getPixelColumn(), position.getPixelRow(), applet);
 	}
 
@@ -94,11 +94,11 @@ public class Item
 		}
 
 			if (iValid==1 && showStatus==1){
-				System.out.println(position.getPixelRow()+"VALID"+position.getPixelColumn());
+				//System.out.println(position.getPixelRow()+"VALID"+position.getPixelColumn());
 				graphics.drawImage(item_image,position.getPixelRow(), position.getPixelColumn(), applet);
 			}
 			else{
-				System.out.println(position.getPixelRow()+"INVALID"+position.getPixelColumn());
+				//System.out.println(position.getPixelRow()+"INVALID"+position.getPixelColumn());
 				graphics.drawImage(imageBlank,position.getPixelRow(), position.getPixelColumn(), applet);
 			}
 		

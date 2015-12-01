@@ -1,5 +1,5 @@
 /* 
- * @author Sarthak Ahuja
+ * @author Sarthak Ahuja and Anchita Goel
  */
 
 package com.ai.major;
@@ -20,9 +20,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * the main class of the simulator
@@ -33,13 +31,15 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	/**
 	 * 
 	 */
+	public static boolean heredebug=true;
+	public static int here=0;
 	private static final long serialVersionUID = 1L;
 	// the timer
 	Thread timer;
 	int timerPeriod=12;  // in miliseconds
 
-	// the timer will increment this variable to signal a frame
-	int signalMove=0;
+	// Used to signal frame
+	static int signalMove=0;
 
 	// for graphics
 	final int canvasWidth=368;
@@ -56,15 +56,20 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	// the off screen canvas for the maze
 	Image offScreen;
 	Graphics offScreenG;
+	
+	//BOOLEAN MOVE FLAG
+	public static boolean boolmove=false;
 
-	// the objects    
-	Map map;
-	ArrayList<Item> items;
-	ArrayList<Position> workstations;
-	ArrayList<Position> conveyorbelts;
-	ArrayList<Butler> butlers;
-	Set<Butler> IdleButlers;
-	Set<Butler> NonIdleButlers;
+	// GLOBAL STATIC OBJECTS   
+	public static Map map;
+	public static ArrayList<Item> items;
+	public static ArrayList<Position> workstations;
+	public static ArrayList<Position> conveyorbelts;
+	public static ArrayList<Butler> butlers;
+	public static ArrayList<Butler> reachedTargetThisStep;
+	public static ArrayList<Butler> IdleButlers;
+	public static ArrayList<Butler> NonIdleButlers;
+	
 
 	// score
 	int score;
@@ -119,9 +124,9 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		workstations = new ArrayList<Position>();
 		conveyorbelts = new ArrayList<Position>();
 		butlers = new ArrayList<Butler>();
-		IdleButlers = new HashSet<Butler>();
-		NonIdleButlers = new HashSet<Butler>();
-
+		IdleButlers = new ArrayList<Butler>();
+		NonIdleButlers = new ArrayList<Butler>();
+		boolmove=false;
 		addWindowListener(this);
 
 		addKeyListener(this);
@@ -171,11 +176,11 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		{
 			Color color;
 			color=Utility.ColorArray[i];
-			Butler b =new Butler(this, offScreenG, map, color);
+			Butler b =new Butler(this, offScreenG, map, color,i);
 			butlers.add(b);
 			IdleButlers.add(b);
 		}
-
+		
 
 		imgScore=createImage(150,16);
 		imgScoreG=imgScore.getGraphics();
@@ -209,7 +214,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		changeScore=1;
 
 		newMaze=true;
-
+		sdebugger("inside startGame");
 		startRound();
 	}
 
@@ -224,31 +229,54 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 			}
 			newMaze=false;
 		}
-
+		sdebugger("inside Start Round");
 		map.draw();	
 		KeyPressed=Utility.DOWN;
 		gameState=STARTWAIT;
 	}
 	
-	void start(){
-		for (int i=0; i<items.size(); i++){
-			IdleButlers.remove(butlers.get(i));
-			NonIdleButlers.add(butlers.get(i));
-			ArrayList<Position> positionlist=new ArrayList<Position>();
-			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()]);
-			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+1]);
-			positionlist.add(map.environment[workstations.get(i).getRow()+1][workstations.get(i).getColumn()]);
-			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+3]);
-			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+4]);
-			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+5]);
-			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+6]);
-			positionlist.add(map.environment[workstations.get(i).getRow()][workstations.get(i).getColumn()+7]);
-			System.out.println(positionlist.size());
-			butlers.get(i).start(positionlist,items.get(i));
-			for(int j=0;j<4;j++){
-				System.out.println(positionlist.get(j).getRow()+" "+positionlist.get(j).getColumn());
-			}
-		}
+	//START THE ALGORITHM
+	public static void start(){
+			MAPP myRunnable = new MAPP();
+	        Thread t = new Thread(myRunnable);
+	        t.start();
+			Simulator.sdebugger("Start Algorithm");
+	}
+	
+	//SIGNAL FOR A MOVE
+	public static void makeMove(){
+		Simulator.sdebugger("Told Simulator that we are ready for move");
+		boolmove=true;
+		//System.exit(0);
+	}
+	
+	//SIGNAL COMPLETION A MOVE
+	public static void doneMove(){
+		Simulator.sdebugger("Simulator Completed a move");
+		boolmove=false;
+	}
+	
+	//CHECK FOR A MOVE
+	public static boolean checkMove(){
+		return boolmove;
+	}
+	
+	public static void debugger(){
+		if (Simulator.heredebug) {System.out.println(here);Simulator.here+=Simulator.here+1;}
+	}
+	
+	public static void sdebugger(String s){
+		if (Simulator.heredebug) {System.out.println(s);Simulator.here+=Simulator.here+1;}
+	}
+	
+	//MAKE A MOVE
+	void move(){
+		
+		Simulator.sdebugger("Simulator is going to make a move");
+		//System.exit(0);
+		MAPP.doProgression(NonIdleButlers);
+		MAPP.doRepositioning(NonIdleButlers);
+		doneMove();
 	}
 
 	//PAINT EVERYTHING IN THE BEGINNING
@@ -268,9 +296,9 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 					canvasHeight+insets.top+insets.bottom);
 
 			setResizable(false);
-
+			sdebugger("inside paint");
 			startGame();	  
-
+			
 			startTimer();
 
 		}
@@ -334,22 +362,17 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		}
 	}
 
-	//MAKE A MOVE FOR EACH BUTLER
-	void move()
-	{
-		Iterator<Butler> iterator_ = (Iterator<Butler>) NonIdleButlers.iterator();
-		while (iterator_.hasNext())
-			iterator_.next().move();
-	}	
-
 	//CLOCK FUNCTION
 	public void update(Graphics g)
 	{
+		Simulator.sdebugger("Checking Game Status!");
+		
 		if (gameState == INITIMAGE)
 			return;
 
 		if (signalMove!=0)
 		{
+			
 			signalMove=0;
 
 			switch (gameState)
@@ -364,7 +387,10 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 				}
 				break;
 			case RUNNING:
+				if(checkMove()){
 					move();
+					System.exit(0);
+				}
 				break;
 			}
 			key=NONE;

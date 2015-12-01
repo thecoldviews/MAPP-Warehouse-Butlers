@@ -1,5 +1,5 @@
 /* 
- * @author Sarthak Ahuja
+ * @author Sarthak Ahuja and Anchita Goel
  */
 package com.ai.major;
 
@@ -67,16 +67,59 @@ public class Map
 		ws=new ArrayList<Position>();
 		gs=new ArrayList<Position>();
 		environment=new Position[HEIGHT][WIDTH];
-		for (int i =0; i<HEIGHT;i++)
+		for (int i =0; i<HEIGHT;i++){
 			for (int j =0;j<WIDTH;j++)
 			{
 				this.environment[i][j] = new Position();
-				this.environment[i][j].setColumn(i);
-				this.environment[i][j].setRow(j);
+				this.environment[i][j].setColumn(j);
+				this.environment[i][j].setRow(i);
 				
 			}
+		}
 	}
 
+	public void printWarehouse()
+	{
+		for (int i =0;i<environment.length;i++)
+		{
+			for (int j = 0; j<environment[0].length;j++)
+			{
+				if (environment[i][j].isWall)
+				   System.out.print("W");
+				else if (environment[i][j].isButler)
+					System.out.print(environment[i][j].butler.myNumber+1);
+				else 
+					System.out.print("0");
+				System.out.print(" ");
+			}
+			System.out.println();
+		}
+		
+	}
+	
+	public void move(Butler butler, Position from , Position to)
+	{
+		System.out.println("Before moving "+butler+" from "+from+" to "+to);
+		printWarehouse();
+		if (from.butler!=butler)
+		{
+			System.err.println("BUtlers MISMATCH!!!");
+			System.out.println(" butler's current position is "+butler.currentPosition.hashCode()+ "and position is "+from.hashCode());
+			System.out.println("From butler is "+from.butler+" and moving is "+butler);
+			return;
+		}
+		butler.move(to);
+		from.isButler = false;
+		System.out.println("Setting "+from.hashCode()+"to false");
+		from.butler = null;
+		to.isButler = true;
+		System.out.println("Setting "+to.hashCode()+"to true");
+		to.butler = butler;
+		System.out.println("After moving "+butler+" from "+from+" to "+to);
+		//printWarehouse();
+		//System.exit(0);
+		
+	}
 	public void start()
 	{
 		int i,j,k;
@@ -95,12 +138,6 @@ public class Map
 				case 'O':
 					k=ITEM;
 					break;
-				case '-':
-					k=WSDOOR;
-					break;
-				case '*':
-					k=BELTDOOR;
-					break;
 				case 'W':
 					k=WORKSTATION;
 					break;
@@ -114,11 +151,12 @@ public class Map
 				environment[i][j].setType(k);
 			}
 		// create initial maze image
-		createImage();	
+		createImage();
 	}
-
+	
 	public void draw()
 	{
+		Simulator.sdebugger("Draw Map");
 		graphics.drawImage(imageMaze,0,0,applet);
 	}
 	
@@ -170,8 +208,8 @@ public class Map
 					continue;
 				}
 				if(environment[i][j].getType()==ITEM){
-					System.out.println(i);
-					System.out.println(j);
+					//System.out.println(i);
+					//System.out.println(j);
 					items.add(new Item(applet, graphics,environment[i][j]));
 				}
 				if(environment[i][j].getType()==WORKSTATION){

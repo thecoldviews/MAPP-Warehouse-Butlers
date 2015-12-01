@@ -1,5 +1,5 @@
 /* 
- * @author Sarthak Ahuja
+ * @author Sarthak Ahuja and Anchita Goel
  */
 package com.ai.major;
 
@@ -23,7 +23,7 @@ public class Warehouse1 extends Warehouse
 				"X  X  X  X  X  X  X X",	// 9
 				"X  X  X  X  X  X  X X",	// 10
 				"X                   X",	// 11
-				"X        O   O O O  X",	// 12
+				"X                   X",	// 12
 				"X                   X",	// 13
 				"X                   X",	// 14
 				"XWWWWWWWW   GGGGGGGGX",	// 15
