@@ -13,14 +13,14 @@ public class Warehouse1 extends Warehouse
 		String[] MazeDefine2=
 			{
 				"XXXXXXXXXXXXXXXXXXXXX",	// 1
-				"X                   X",	// 2
+				"XO               O  X",	// 2
 				"X  X  X  X  X  X  X X",	// 3
-				"X  X  X  X  X  X  X X",	// 4
-				"X  X  X  XO X  X  X X",	// 5
-				"X  X  X  X  X  X  X X",	// 6
+				"X  X  X  XOOX  X  X X",	// 4
+				"X  X  X  XOOX  X  X X",	// 5
+				"X  X  X  X  X OX  X X",	// 6
 				"X  X  X  X  X  X  X X",	// 7
 				"X  X  X  X  X  X  X X",	// 8
-				"X  X  X  X  X  X  X X",	// 9
+				"XO X  X  X  X  X  X X",	// 9
 				"X  X  X  X  X  X  X X",	// 10
 				"X                   X",	// 11
 				"X                   X",	// 12

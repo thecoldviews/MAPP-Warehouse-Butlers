@@ -20,7 +20,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+
+import sun.misc.Signal;
 
 /**
  * the main class of the simulator
@@ -31,6 +34,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	/**
 	 * 
 	 */
+	public static ArrayList<Move> movesThisStep;
 	public static boolean heredebug=true;
 	public static int here=0;
 	private static final long serialVersionUID = 1L;
@@ -69,6 +73,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	public static ArrayList<Butler> reachedTargetThisStep;
 	public static ArrayList<Butler> IdleButlers;
 	public static ArrayList<Butler> NonIdleButlers;
+	public static ArrayList<Butler> ReachedButlers;
 	
 
 	// score
@@ -126,6 +131,8 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		butlers = new ArrayList<Butler>();
 		IdleButlers = new ArrayList<Butler>();
 		NonIdleButlers = new ArrayList<Butler>();
+		ReachedButlers = new ArrayList<Butler>();
+		reachedTargetThisStep = null;
 		boolmove=false;
 		addWindowListener(this);
 
@@ -228,19 +235,12 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 				items.get(i).start();
 			}
 			newMaze=false;
+			signalMove++;
 		}
 		sdebugger("inside Start Round");
 		map.draw();	
 		KeyPressed=Utility.DOWN;
 		gameState=STARTWAIT;
-	}
-	
-	//START THE ALGORITHM
-	public static void start(){
-			MAPP myRunnable = new MAPP();
-	        Thread t = new Thread(myRunnable);
-	        t.start();
-			Simulator.sdebugger("Start Algorithm");
 	}
 	
 	//SIGNAL FOR A MOVE
@@ -271,12 +271,9 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	
 	//MAKE A MOVE
 	void move(){
-		
-		Simulator.sdebugger("Simulator is going to make a move");
-		//System.exit(0);
-		MAPP.doProgression(NonIdleButlers);
-		MAPP.doRepositioning(NonIdleButlers);
-		doneMove();
+		doProgression();
+		doRepositioning(NonIdleButlers);
+		signalMove++;
 	}
 
 	//PAINT EVERYTHING IN THE BEGINNING
@@ -314,12 +311,18 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 	void paintUpdate(Graphics g)
 	{
+sdebugger("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		map.draw();
 		for (int i=0; i<items.size(); i++)
 			items.get(i).draw();
 		
 		Iterator<Butler> iterator = (Iterator<Butler>)NonIdleButlers.iterator();
 		while(iterator.hasNext()){
 			(iterator.next()).draw();
+		}
+		Iterator<Butler> iterator2 = (Iterator<Butler>)ReachedButlers.iterator();
+		while(iterator2.hasNext()){
+			(iterator2.next()).draw();
 		}
 
 		g.drawImage(offScreen, 
@@ -350,16 +353,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 			changeScore=0;
 		}
 		
-		// UPDATE NUMBER OF AGENTS WORKING 
-		Iterator<Butler> iterator_ = (Iterator<Butler>) IdleButlers.iterator();
-		int count=0;
-		while (iterator_.hasNext())
-		{
-			g.drawImage(iterator_.next().imageIdle, 
-					16*count+ leftOffset, 
-					canvasHeight-18+ topOffset, this);
-			count++;
-		}
+		
 	}
 
 	//CLOCK FUNCTION
@@ -367,35 +361,42 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	{
 		Simulator.sdebugger("Checking Game Status!");
 		
-		if (gameState == INITIMAGE)
+		if (gameState == INITIMAGE){
 			return;
+		}
 
 		if (signalMove!=0)
 		{
+			Simulator.sdebugger("Processing Signal!");
 			
 			signalMove=0;
 
 			switch (gameState)
 			{
 			case STARTWAIT: 
+				Simulator.sdebugger("STARTWAIT");
 				if (KeyPressed==Utility.UP){
-					gameState=RUNNING;
-					start();
+					Simulator.sdebugger("PRESSED UP");
+					if (testSlidable()){
+						gameState=RUNNING;
+						signalMove++;
+					}
 				}
 				else{
+					signalMove++;
 					return;
 				}
 				break;
 			case RUNNING:
-				if(checkMove()){
-					move();
-					System.exit(0);
-				}
+					Simulator.sdebugger("RUNNING");
+					if(!Simulator.NonIdleButlers.isEmpty())
+						move();
 				break;
 			}
 			key=NONE;
+			
 		}
-
+		//System.exit(0);
 		paintUpdate(g);	
 	}
 
@@ -450,7 +451,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 				return;
 			}
 
-			signalMove++;
+			//signalMove++;
 			repaint();
 		}
 	}
@@ -495,6 +496,260 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 	public void setFinalized(boolean finalized) {
 		this.finalized = finalized;
+	}
+	
+	//----------------//
+	public static boolean testSlidable()
+	{
+		Simulator.sdebugger("TestSlidable");
+		for (int i=0;i<Simulator.items.size();i++)
+		{
+			System.err.println("Finding path for butler "+i);
+			while(Simulator.IdleButlers.remove(Simulator.butlers.get(i)));
+			Simulator.NonIdleButlers.add(Simulator.butlers.get(i));
+			Simulator.butlers.get(i).start(Simulator.items.get(i),Simulator.workstations.get(i));
+			System.out.println("WS:"+Simulator.workstations.get(i));
+			Simulator.map.environment[Simulator.butlers.get(i).currentPosition.getRow()][Simulator.butlers.get(i).currentPosition.getColumn()].butlerTarget =i;
+			Simulator.map.environment[Simulator.butlers.get(i).currentPosition.getRow()][Simulator.butlers.get(i).currentPosition.getColumn()].isButler = true;
+			Simulator.map.environment[Simulator.butlers.get(i).currentPosition.getRow()][Simulator.butlers.get(i).currentPosition.getColumn()].butler =Simulator.butlers.get(i);
+			Simulator.butlers.get(i).setPath(FindPath.findPathAstar(Simulator.map, i, Simulator.butlers.get(i).currentPosition,Simulator.butlers.get(i).assignment.position));
+			System.out.println(Simulator.butlers.get(i));
+			//System.exit(0);
+			if (Simulator.butlers.get(i).path.piPath.isEmpty())
+			{
+				System.out.println("not slidable");
+				return false;
+			}
+			else
+			{
+				//System.out.println("---------------Printing some important shizz----------------");
+				Path p = Simulator.butlers.get(i).path;
+				int piPathSize = p.piPath.size();
+				/*for (int k=p.piPath.size()-1;k>=0;k--)
+					System.out.println(p.piPath.get(k)+"->");*/
+				
+				
+				/*for (int k=p.piPath.size()-1;k>=0;k--)
+				
+				{
+					System.out.println("Alternate Path: ");
+					ArrayList<Position> alternatePath = p.getAlternatePath(p.piPath.get(k));
+					for (int m=alternatePath.size()-1;m>=0;m--)
+					{
+						System.out.println(alternatePath.get(m)+",");
+					}
+					
+				}
+				System.out.println("---------------End shizz----------------");*/
+			}
+		}
+		Simulator.map.printWarehouse();
+		//System.exit(0);
+		return true;
+	}
+	
+	public static void doRepositioning(ArrayList<Butler> activeUnits)
+	{
+		System.out.println("Repositioning");
+		for (int i=movesThisStep.size()-1;i>=0;i--)
+		{
+			Move move = movesThisStep.get(i);
+			if (activeUnits.contains(move.butler))
+			{
+				System.out.println("Moving  "+move.butler+" from "+move.to+" to "+move.from);
+				
+				Simulator.map.move(move.butler,move.to, move.from);
+				
+			}
+		}
+		
+	}
+	
+	
+	public ArrayList<Butler> doProgression()
+	{
+		Simulator.sdebugger("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		Simulator.sdebugger("Inside Progression");
+		movesThisStep = new ArrayList<Move>();
+		ArrayList<Butler> reachedThisStep  = new ArrayList<>();
+		System.err.println("New array for moves");
+		ArrayList<ArrayList<Position>> statesVisited = new ArrayList<>();
+		for (int i =0; i<NonIdleButlers.size();i++)
+		{
+			statesVisited.add(new ArrayList<Position>());
+		}
+		boolean change = false;
+		do {
+		change = false;
+		Collections.sort(NonIdleButlers);
+		for (int i=0;i<NonIdleButlers.size();i++)
+		{
+			
+			Butler currentBut = NonIdleButlers.get(i);
+			System.out.println("doProgression for butler "+currentBut.myNumber);
+			System.out.println("Current position being acquired is "+currentBut.currentPosition.getRow()+","+currentBut.currentPosition.getColumn());
+			Position currentPosition = Simulator.map.environment[currentBut.currentPosition.getRow()][currentBut.currentPosition.getColumn()];
+			Position nextMove = currentBut.path.returnSuccessor(currentPosition);
+			currentBut.path.printPath();
+			System.out.println("The next move is "+nextMove);
+			Position newBlank;
+			if (!currentBut.path.piPath.contains(currentPosition))
+			{
+				System.out.println("Current position not in the path");
+				continue;
+			}
+			else if (statesVisited.get(i).contains(nextMove))
+			{
+				System.out.println("Already visited the nextmove");
+				continue;
+			}
+			else if (locationInPrivateZone(currentBut,NonIdleButlers,nextMove))
+			{
+				System.out.println("Location on the private zone of others");
+				continue;
+			}
+			else if (!nextMove.isOcuupied())
+			{
+				
+				System.out.println("Moving  "+currentBut.myNumber+" from "+currentPosition+" to "+nextMove);
+				System.out.println("Moving  "+currentBut.myNumber+" from but "+currentBut.currentPosition.hashCode()+" to  "+currentPosition.hashCode());
+				Simulator.map.move(currentBut, currentPosition, nextMove);
+				signalMove=1;
+				paintUpdate(getGraphics());
+				try {
+					
+				    Thread.sleep(100);                 //1000 milliseconds is one second.
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
+				statesVisited.get(i).add(nextMove);
+				Move newMove = new Move(currentBut,currentPosition,nextMove);
+				movesThisStep.add(newMove);
+				System.err.println("Added move for butler "+currentBut+" from "+currentPosition+" to "+nextMove);
+				change = true;
+				if (currentBut.atDestination())
+					{
+						while(NonIdleButlers.remove(currentBut));
+						ReachedButlers.add(currentBut);
+						reachedThisStep.add(currentBut);
+						//return reachedThisStep;
+					}
+			}
+			else if ((newBlank = canCreateBlank(currentBut,NonIdleButlers,nextMove,currentBut.path.getAlternatePath(currentPosition)))!=null)
+			{
+				createBlank(currentBut, newBlank , nextMove, currentBut.path.getAlternatePath(currentPosition));
+				System.out.println("Moving  "+currentBut.myNumber+" from "+currentPosition+" to "+nextMove);
+				Simulator.map.move(currentBut, currentPosition, nextMove);
+				Move newMove = new Move(currentBut,currentPosition,nextMove);
+				statesVisited.get(i).add(nextMove);
+				movesThisStep.add(newMove);
+				change = true;
+				if (currentBut.atDestination())
+				{
+					while(NonIdleButlers.remove(currentBut));
+					ReachedButlers.add(currentBut);
+					reachedThisStep.add(currentBut);
+					//return reachedThisStep;
+				}
+			}
+			else
+			{
+				System.out.println("Something else only");
+				continue;
+			}
+			
+		}
+		
+			
+			
+		}while(change);
+		
+		return reachedThisStep;
+		
+	}
+	
+	
+	public static void createBlank(Butler butler, Position sourceBlank, Position destBlank, ArrayList<Position> path)
+	{
+		System.out.println("Blank at "+sourceBlank);
+		System.out.println("Moving Blank to "+destBlank);
+		System.out.println("Moving blank along the path : ");
+		for (int i=path.size()-1;i>=0;i--)
+			System.out.println(path.get(i)+"->");
+		
+		destBlank = Simulator.map.environment[destBlank.getRow()][destBlank.getColumn()];
+		while (destBlank.isOcuupied())
+		{
+			sourceBlank = Simulator.map.environment[sourceBlank.getRow()][sourceBlank.getColumn()];
+			int moveFrom = path.indexOf(sourceBlank) - 1;
+			
+			System.out.println("Moving robot from "+path.get(moveFrom)+" to "+path.get(moveFrom+1));
+			Position from = Simulator.map.environment[path.get(moveFrom).getRow()][path.get(moveFrom).getColumn()];
+			Position to = Simulator.map.environment[path.get(moveFrom+1).getRow()][path.get(moveFrom+1).getColumn()];
+			Move newMove = new Move(from.butler,from,to);
+			movesThisStep.add(newMove);
+			System.err.println("Added move in createBlank for butler "+from.butler+" from "+from+" to "+to);
+			Simulator.map.move(from.butler, from, to);
+			
+			
+			sourceBlank = path.get(moveFrom);
+			
+			
+		}
+		
+	}
+	
+	public static Position canCreateBlank(Butler butler, ArrayList<Butler> active, Position nextMove, ArrayList<Position> alternatePath)
+	{
+		Iterator iterator = alternatePath.iterator();
+		Position l;
+		while (iterator.hasNext())
+		{
+			l = (Position) iterator.next();
+			l = Simulator.map.environment[l.getRow()][l.getColumn()];
+			System.out.println("Checking for location "+l+" with hash code "+l.hashCode());
+			if (locationInPrivateZone(butler, active, l))
+			{
+				return null;
+			}
+			else
+			{
+				if (!l.isOcuupied())
+				{
+					System.out.println(l+" is blank.");
+					return l;
+				}
+				else
+				{
+					System.out.println(l+" was not blank.");
+				}
+			}
+		}
+		return null;
+		
+	}
+	
+	
+	public static boolean locationInPrivateZone(Butler currentBut, ArrayList<Butler> active,Position nextMove)
+	{
+		Collections.sort(active);
+		for (int i=0;i<active.size();i++)
+		{
+			if (active.get(i).priority < currentBut.priority)
+			{
+				if (active.get(i).getPrivateZone().contains(nextMove))
+				{
+					System.out.println(nextMove+" in the private zone of "+active.get(i).myNumber);
+					return true;
+				}
+			}
+			else
+			{
+				break;
+			}
+			
+		}
+		return false;
 	}
 }
 

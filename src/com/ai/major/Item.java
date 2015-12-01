@@ -95,11 +95,11 @@ public class Item
 
 			if (iValid==1 && showStatus==1){
 				//System.out.println(position.getPixelRow()+"VALID"+position.getPixelColumn());
-				graphics.drawImage(item_image,position.getPixelRow(), position.getPixelColumn(), applet);
+				graphics.drawImage(item_image,position.getPixelColumn(),position.getPixelRow(), applet);
 			}
 			else{
 				//System.out.println(position.getPixelRow()+"INVALID"+position.getPixelColumn());
-				graphics.drawImage(imageBlank,position.getPixelRow(), position.getPixelColumn(), applet);
+				graphics.drawImage(item_image,position.getPixelColumn(),position.getPixelRow(), applet);
 			}
 		
 	} 

@@ -92,9 +92,9 @@ public class Butler implements Comparable<Butler>
 			graphics.drawImage(imageIdle, currentPosition.getPixelRow()-1, currentPosition.getPixelColumn()-1, applet);
 		}
 		else if (iStatus==FETCH){
-			graphics.drawImage(imageOnDuty, currentPosition.getColumn()*16-1, currentPosition.getRow()*16-1, applet);
+			graphics.drawImage(imageOnDuty, currentPosition.getPixelColumn()-1, currentPosition.getPixelRow()-1, applet);
 		}
-		//System.exit(0);
+		//Simulator.sdebugger(s);
 	}  
 
 	//MAKE A MOVE ACCORDING TO STATUS
@@ -108,17 +108,11 @@ public class Butler implements Comparable<Butler>
 		//if(nextPosition!=null){
 		int dir=getDirection(currentPosition,nextPosition);
 		currentPosition = p;
-		/*currentPosition.setPixelRow(currentPosition.getPixelRow()+Utility.iXDirection[dir]*16);
-		currentPosition.setPixelColumn(currentPosition.getPixelColumn()+Utility.iYDirection[dir]*16);*/
+		//currentPosition.setPixelRow(currentPosition.getPixelRow()+Utility.iXDirection[dir]*16);
+		//currentPosition.setPixelColumn(currentPosition.getPixelColumn()+Utility.iYDirection[dir]*16);
+		
 		System.out.println(currentPosition.getRow()+"CURRENTCOORDINATE"+currentPosition.getColumn());
 		//System.out.println(currentPosition.getPixelRow()+"CURRENTPIXEL"+currentPosition.getPixelColumn());
-		System.out.println("COMPLETED MY MOVE");
-		System.out.println("COMPLETED MY MOVE");
-		System.out.println("COMPLETED MY MOVE");
-		System.out.println("COMPLETED MY MOVE");
-		System.out.println("COMPLETED MY MOVE");
-		System.out.println("COMPLETED MY MOVE");
-		System.out.println("COMPLETED MY MOVE");
 		if (currentPosition.getPixelRow()%16==0 && currentPosition.getPixelColumn()%16==0)
 		{
 			

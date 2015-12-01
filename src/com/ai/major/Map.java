@@ -100,7 +100,7 @@ public class Map
 	public void move(Butler butler, Position from , Position to)
 	{
 		System.out.println("Before moving "+butler+" from "+from+" to "+to);
-		printWarehouse();
+		//printWarehouse();
 		if (from.butler!=butler)
 		{
 			System.err.println("BUtlers MISMATCH!!!");
