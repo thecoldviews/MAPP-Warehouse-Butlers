@@ -1,5 +1,9 @@
 # MAPP-Warehouse-Butlers
-To Run the code simply import the project into eclipse and run the java applet in com.ai.major.wrapper
+To run the code simply import the project into eclipse and run the java applet in com.ai.major.wrapper
+
+## Citations
+ - This is based on the algorithm proposed by Ko-Hsin Cindy Wang and Adi Botea in their paper "MAPP: a Scalable Multi-Agent Path Planning Algorithm with Tractability and Completeness Guarantees" in "Journal of Artificial Intelligence Research" in 2011.
+ - The UI has been constructed by taking apart the "Capstone Pacman" code from "https://github.com/rdkral/Capstone-Pacman"
 
 ## Creating Custom Maps
 One can create custom maps by either editing the current warehouses or adding new ones. A custom warehouse is created by extending the Warehouse class and defining the Warehouse in the String Array MazeDefine:
@@ -31,3 +35,5 @@ Example:
   * "XWWWWWWW____GGGGGGGGX",	// 15
   * "XXXXXXXXXXXXXXXXXXXXX",	// 16
  * };
+
+
