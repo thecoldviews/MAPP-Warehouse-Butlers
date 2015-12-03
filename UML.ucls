@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.9" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="com.ai.major.Utility" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Utility.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="340" width="133" x="100" y="-357"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="com.ai.major.Warehouse6" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse6.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="111" x="1419" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="com.ai.major.Warehouse7" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse7.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="111" x="1570" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="com.ai.major.Warehouse4" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse4.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="111" x="1721" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="com.ai.major.AboutWindow" project="Simulator" 
+    file="/Simulator/src/com/ai/major/AboutWindow.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="232" width="224" x="387" y="-357"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="com.ai.major.Warehouse5" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse5.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="111" x="1872" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="com.ai.major.Warehouse2" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse2.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="111" x="2023" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="com.ai.major.Warehouse3" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse3.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="111" x="2174" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="com.ai.major.FindPath" project="Simulator" 
+    file="/Simulator/src/com/ai/major/FindPath.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="322" width="405" x="-14" y="1753"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="com.ai.major.Warehouse1" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse1.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="111" x="2325" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="com.ai.major.Path" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Path.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="196" width="300" x="536" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="com.ai.major.Butler" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Butler.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="538" width="249" x="1088" y="1753"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="com.ai.major.Map" project="Simulator" file="/Simulator/src/com/ai/major/Map.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="556" width="250" x="454" y="1157"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="com.ai.major.Position" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Position.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="538" width="181" x="475" y="2729"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="com.ai.major.SpeedControl" project="Simulator" 
+    file="/Simulator/src/com/ai/major/SpeedControl.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="214" width="147" x="1190" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="com.ai.major.Move" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Move.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="199" x="744" y="1157"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="com.ai.major.Warehouse" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="106" width="144" x="1964" y="1753"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="com.ai.major.Item" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Item.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="358" width="211" x="876" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="com.ai.major.Warehouse10" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse10.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="119" x="2476" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="com.ai.major.PathDetails" project="Simulator" 
+    file="/Simulator/src/com/ai/major/PathDetails.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="106" width="146" x="557" y="1753"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="com.ai.major.Visuals" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Visuals.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="160" width="208" x="766" y="-357"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="com.ai.major.Warehouse11" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse11.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="118" x="2635" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="com.ai.major.FindPath.PositionComparator" project="Simulator" 
+    file="/Simulator/src/com/ai/major/FindPath.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="106" width="200" x="-14" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="com.ai.major.Simulator" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Simulator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="1474" width="486" x="1130" y="-357"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="com.ai.major.Warehouse8" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse8.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="111" x="2793" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="26" language="java" name="com.ai.major.Warehouse9" project="Simulator" 
+    file="/Simulator/src/com/ai/major/Warehouse9.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="88" width="111" x="2944" y="2331"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="27">    
+    <bendpoint x="216" y="2331"/>    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="28" name="alternateOpen"/>      
+      <multiplicity id="29" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="30">    
+    <bendpoint x="421" y="1753"/>    
+    <bendpoint x="421" y="2331"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="31" name="gs"/>      
+      <multiplicity id="32" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="33">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="34" name="position"/>      
+      <multiplicity id="35" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="36">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <association id="37">    
+    <bendpoint x="300" y="2331"/>    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="38" name="start"/>      
+      <multiplicity id="39" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="40">    
+    <bendpoint x="526" y="1753"/>    
+    <bendpoint x="505" y="2331"/>    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="41" name="from"/>      
+      <multiplicity id="42" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="43">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="44" name="path"/>      
+      <multiplicity id="45" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="46">    
+    <bendpoint x="1097" y="1157"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="47" name="NonIdleButlers"/>      
+      <multiplicity id="48" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="49">    
+    <bendpoint x="1139" y="1157"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="50" name="ReachedButlers"/>      
+      <multiplicity id="51" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="52">    
+    <bendpoint x="1118" y="1157"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="53" name="reachedTargetThisStep"/>      
+      <multiplicity id="54" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="55">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="56">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <association id="57">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="58" name="path"/>      
+      <multiplicity id="59" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="60">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <association id="61">    
+    <bendpoint x="1012" y="1157"/>    
+    <bendpoint x="1012" y="1753"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="62" name="items"/>      
+      <multiplicity id="63" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="64">    
+    <bendpoint x="258" y="2331"/>    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="65" name="open"/>      
+      <multiplicity id="66" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="67">    
+    <bendpoint x="1160" y="1157"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="68" name="IdleButlers"/>      
+      <multiplicity id="69" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="70">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="71" name="butler"/>      
+      <multiplicity id="72" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="73">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="74">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <association id="75">    
+    <bendpoint x="442" y="1753"/>    
+    <bendpoint x="442" y="2331"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="76" name="environment"/>      
+      <multiplicity id="77" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="78">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <association id="79">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="80" name="assignment"/>      
+      <multiplicity id="81" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="82">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="83" name="path"/>      
+      <multiplicity id="84" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="85">    
+    <bendpoint x="463" y="1753"/>    
+    <bendpoint x="463" y="2331"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="86" name="ws"/>      
+      <multiplicity id="87" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="88">    
+    <bendpoint x="1138" y="2331"/>    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="89" name="nextPosition"/>      
+      <multiplicity id="90" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="91">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="92" name="movesThisStep"/>      
+      <multiplicity id="93" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="94">    
+    <bendpoint x="484" y="1753"/>    
+    <bendpoint x="484" y="2331"/>    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="95" name="to"/>      
+      <multiplicity id="96" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="97">    
+    <bendpoint x="237" y="2331"/>    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="98" name="end"/>      
+      <multiplicity id="99" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="100">    
+    <bendpoint x="1076" y="1157"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="101" name="butlers"/>      
+      <multiplicity id="102" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="103">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="104">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="105">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <association id="106">    
+    <bendpoint x="505" y="1753"/>    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="107" name="items"/>      
+      <multiplicity id="108" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="109">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="110" name="maze"/>      
+      <multiplicity id="111" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="112">    
+    <bendpoint x="1117" y="2331"/>    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="113" name="currentPosition"/>      
+      <multiplicity id="114" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="115">    
+    <bendpoint x="279" y="2331"/>    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="116" name="environment"/>      
+      <multiplicity id="117" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="118">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <nesting id="119">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="23"/>  
+  </nesting>  
+  <association id="120">    
+    <bendpoint x="1556" y="1157"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="121" name="warehouse"/>      
+      <multiplicity id="122" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="123">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="124" name="map"/>      
+      <multiplicity id="125" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="126">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="127" name="warehouse"/>      
+      <multiplicity id="128" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="129">    
+    <bendpoint x="1367" y="1157"/>    
+    <bendpoint x="1367" y="1753"/>    
+    <bendpoint x="1367" y="2331"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="130" name="conveyorbelts"/>      
+      <multiplicity id="131" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="132">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="133" name="piPath"/>      
+      <multiplicity id="134" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="135">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="136" name="butler"/>      
+      <multiplicity id="137" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="138">    
+    <bendpoint x="1388" y="1157"/>    
+    <bendpoint x="1388" y="1753"/>    
+    <bendpoint x="1388" y="2331"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="139" name="workstations"/>      
+      <multiplicity id="140" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="141">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="142" name="parent"/>      
+      <multiplicity id="143" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="144">    
+    <bendpoint x="1159" y="2331"/>    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="145" name="butler"/>      
+      <multiplicity id="146" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="147">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="148" name="speed"/>      
+      <multiplicity id="149" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

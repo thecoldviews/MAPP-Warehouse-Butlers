@@ -34,10 +34,13 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	/**
 	 * 
 	 */
+	public static int statesExpanded = 0;
 	public static ArrayList<Move> movesThisStep;
 	public static boolean heredebug=true;
 	public static int here=0;
 	private static final long serialVersionUID = 1L;
+	private static final long MEGABYTE = 1024L * 1024L;
+	public static long maxmemory = 0;
 	// the timer
 	Thread timer;
 	int timerPeriod=12;  // in miliseconds
@@ -78,7 +81,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 	// score
 	int score;
-	int hiScore;
+	int hiScore = FindPath.statesExpanded;
 	int scoreGhost;	// score of eat ghost, doubles every time
 	int changeScore;	// signal score change
 	int changeHiScore;  // signal change of hi score
@@ -86,8 +89,8 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 	// score images
 	Image imgScore;
 	Graphics imgScoreG;
-	Image imgHiScore;
-	Graphics imgHiScoreG;
+	Image imgExpand;
+	Graphics imgStatesExpanded;
 
 	// game status
 	final int INITIMAGE=100;  // need to wait before paint anything
@@ -191,14 +194,14 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 		imgScore=createImage(150,16);
 		imgScoreG=imgScore.getGraphics();
-		imgHiScore=createImage(150,16);
-		imgHiScoreG=imgHiScore.getGraphics();
+		imgExpand=createImage(150,16);
+		imgStatesExpanded=imgExpand.getGraphics();
 
-		imgHiScoreG.setColor(Color.black);
-		imgHiScoreG.fillRect(0,0,150,16);
-		imgHiScoreG.setColor(Color.green);
-		imgHiScoreG.setFont(new Font("Helvetica", Font.BOLD, 12));
-		imgHiScoreG.drawString("STATES:", 0, 14);
+		imgStatesExpanded.setColor(Color.black);
+		imgStatesExpanded.fillRect(0,0,150,16);
+		imgStatesExpanded.setColor(Color.green);
+		imgStatesExpanded.setFont(new Font("Helvetica", Font.BOLD, 12));
+		imgStatesExpanded.drawString("STATES:", 0, 14);
 
 		imgScoreG.setColor(Color.black);
 		imgScoreG.fillRect(0,0,150,16);
@@ -269,10 +272,22 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 		if (Simulator.heredebug) {System.out.println(s);Simulator.here+=Simulator.here+1;}
 	}
 	
+	 public static long bytesToMegabytes(long bytes) {
+		    return bytes / MEGABYTE;
+		  }
+	
 	//MAKE A MOVE
 	void move(){
 		doProgression();
 		doRepositioning(NonIdleButlers);
+		 Runtime runtime = Runtime.getRuntime();
+		    // Run the garbage collector
+		    runtime.gc();
+		    // Calculate the used memory
+		    long memory = runtime.totalMemory() - runtime.freeMemory();
+		    maxmemory = Math.max(bytesToMegabytes(memory),maxmemory);
+		        
+		 
 		signalMove++;
 	}
 
@@ -311,7 +326,7 @@ implements Runnable, KeyListener, ActionListener, WindowListener
 
 	void paintUpdate(Graphics g)
 	{
-sdebugger("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+sdebugger("------------------"+statesExpanded+"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 		map.draw();
 		for (int i=0; i<items.size(); i++)
 			items.get(i).draw();
@@ -328,30 +343,26 @@ sdebugger("---------------------------------------------------------------------
 		g.drawImage(offScreen, 
 				iMazeX+ leftOffset, iMazeY+ topOffset, this); 
 
-		// DISPLAY STATS
-		if (changeHiScore==1)
-		{
-			imgHiScoreG.setColor(Color.black);
-			imgHiScoreG.fillRect(70,0,80,16);
-			imgHiScoreG.setColor(Color.red);
-			imgHiScoreG.drawString(Integer.toString(hiScore), 70,14);
-			g.drawImage(imgHiScore, 
+
+			imgStatesExpanded.setColor(Color.black);
+			imgStatesExpanded.fillRect(70,0,80,16);
+			imgStatesExpanded.setColor(Color.red);
+			imgStatesExpanded.drawString(Integer.toString(statesExpanded), 70,14);
+			g.drawImage(imgExpand, 
 					8+ leftOffset, 0+ topOffset, this);
 
-			changeHiScore=0;
-		}
 
-		if (changeScore==1)
-		{
+
+		
 			imgScoreG.setColor(Color.black);
 			imgScoreG.fillRect(70,0,80,16);
 			imgScoreG.setColor(Color.green);
-			imgScoreG.drawString(Integer.toString(score), 70,14);
+			imgScoreG.drawString(Long.toString(maxmemory), 70,14);
 			g.drawImage(imgScore, 
 					158+ leftOffset, 0+ topOffset, this);
 
 			changeScore=0;
-		}
+		
 		
 		
 	}
@@ -475,11 +486,11 @@ sdebugger("---------------------------------------------------------------------
 		NonIdleButlers=null;
 
 		imgScore=null;
-		imgHiScore=null;
+		imgExpand=null;
 		imgScoreG.dispose();
 		imgScoreG=null;
-		imgHiScoreG.dispose();
-		imgHiScoreG=null;
+		imgStatesExpanded.dispose();
+		imgStatesExpanded=null;
 
 		menuBar=null;
 		help=null;
@@ -498,7 +509,7 @@ sdebugger("---------------------------------------------------------------------
 		this.finalized = finalized;
 	}
 	
-	//----------------//
+	//---------MAPP ALGORITHM CLASSES--------//
 	public static boolean testSlidable()
 	{
 		Simulator.sdebugger("TestSlidable");
@@ -512,12 +523,21 @@ sdebugger("---------------------------------------------------------------------
 			Simulator.map.environment[Simulator.butlers.get(i).currentPosition.getRow()][Simulator.butlers.get(i).currentPosition.getColumn()].butlerTarget =i;
 			Simulator.map.environment[Simulator.butlers.get(i).currentPosition.getRow()][Simulator.butlers.get(i).currentPosition.getColumn()].isButler = true;
 			Simulator.map.environment[Simulator.butlers.get(i).currentPosition.getRow()][Simulator.butlers.get(i).currentPosition.getColumn()].butler =Simulator.butlers.get(i);
-			Simulator.butlers.get(i).setPath(FindPath.findPathAstar(Simulator.map, i, Simulator.butlers.get(i).currentPosition,Simulator.butlers.get(i).assignment.position));
+			PathDetails pd = FindPath.findPathAstar(Simulator.map, i, Simulator.butlers.get(i).currentPosition,Simulator.butlers.get(i).assignment.position);
+			 Runtime runtime = Runtime.getRuntime();
+			long memory = runtime.totalMemory() - runtime.freeMemory();
+		    maxmemory = Math.max(bytesToMegabytes(memory),maxmemory);
+		        
+			Simulator.butlers.get(i).setPath(pd.path);
+			System.err.println(pd.statesExpanded);
+			statesExpanded  += pd.statesExpanded;
+			System.out.println("Sttstessss000000000000000       "+statesExpanded);
 			System.out.println(Simulator.butlers.get(i));
 			//System.exit(0);
 			if (Simulator.butlers.get(i).path.piPath.isEmpty())
 			{
 				System.out.println("not slidable");
+				System.err.println("NOTTTTTTTTT    SLIDABLE-----");
 				return false;
 			}
 			else
@@ -548,7 +568,7 @@ sdebugger("---------------------------------------------------------------------
 		return true;
 	}
 	
-	public static void doRepositioning(ArrayList<Butler> activeUnits)
+	public void doRepositioning(ArrayList<Butler> activeUnits)
 	{
 		System.out.println("Repositioning");
 		for (int i=movesThisStep.size()-1;i>=0;i--)
@@ -559,7 +579,14 @@ sdebugger("---------------------------------------------------------------------
 				System.out.println("Moving  "+move.butler+" from "+move.to+" to "+move.from);
 				
 				Simulator.map.move(move.butler,move.to, move.from);
-				
+				signalMove=1;
+				paintUpdate(getGraphics());
+				try {
+					
+				    Thread.sleep(100);                 //1000 milliseconds is one second.
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
 			}
 		}
 		
@@ -626,6 +653,7 @@ sdebugger("---------------------------------------------------------------------
 				Move newMove = new Move(currentBut,currentPosition,nextMove);
 				movesThisStep.add(newMove);
 				System.err.println("Added move for butler "+currentBut+" from "+currentPosition+" to "+nextMove);
+				System.err.println("--------------------------------"+statesExpanded);
 				change = true;
 				if (currentBut.atDestination())
 					{
@@ -640,6 +668,14 @@ sdebugger("---------------------------------------------------------------------
 				createBlank(currentBut, newBlank , nextMove, currentBut.path.getAlternatePath(currentPosition));
 				System.out.println("Moving  "+currentBut.myNumber+" from "+currentPosition+" to "+nextMove);
 				Simulator.map.move(currentBut, currentPosition, nextMove);
+				signalMove=1;
+				paintUpdate(getGraphics());
+				try {
+					
+				    Thread.sleep(100);                 //1000 milliseconds is one second.
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
 				Move newMove = new Move(currentBut,currentPosition,nextMove);
 				statesVisited.get(i).add(nextMove);
 				movesThisStep.add(newMove);
@@ -669,7 +705,7 @@ sdebugger("---------------------------------------------------------------------
 	}
 	
 	
-	public static void createBlank(Butler butler, Position sourceBlank, Position destBlank, ArrayList<Position> path)
+	public void createBlank(Butler butler, Position sourceBlank, Position destBlank, ArrayList<Position> path)
 	{
 		System.out.println("Blank at "+sourceBlank);
 		System.out.println("Moving Blank to "+destBlank);
@@ -690,6 +726,14 @@ sdebugger("---------------------------------------------------------------------
 			movesThisStep.add(newMove);
 			System.err.println("Added move in createBlank for butler "+from.butler+" from "+from+" to "+to);
 			Simulator.map.move(from.butler, from, to);
+			signalMove=1;
+			paintUpdate(getGraphics());
+			try {
+				
+			    Thread.sleep(100);                 //1000 milliseconds is one second.
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
 			
 			
 			sourceBlank = path.get(moveFrom);

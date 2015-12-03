@@ -26,7 +26,6 @@ public class Butler implements Comparable<Butler>
 	Position currentPosition;
 	Position nextPosition;
 	int iStatus;
-	int iBlink, iBlindCount;
 
 	final int DIR_FACTOR=2;
 	final int POS_FACTOR=10;
@@ -81,6 +80,7 @@ public class Butler implements Comparable<Butler>
 		
 	}
 	
+	//SET BUTLER PATH
 	public void setPath(Path positionList){
 		this.path=positionList;
 	}
@@ -94,7 +94,6 @@ public class Butler implements Comparable<Butler>
 		else if (iStatus==FETCH){
 			graphics.drawImage(imageOnDuty, currentPosition.getPixelColumn()-1, currentPosition.getPixelRow()-1, applet);
 		}
-		//Simulator.sdebugger(s);
 	}  
 
 	//MAKE A MOVE ACCORDING TO STATUS
@@ -104,13 +103,9 @@ public class Butler implements Comparable<Butler>
 			// no move
 		return;
 		nextPosition=p;
-//		boolean transitioning=false;
-		//if(nextPosition!=null){
 		int dir=getDirection(currentPosition,nextPosition);
 		currentPosition = p;
-		//currentPosition.setPixelRow(currentPosition.getPixelRow()+Utility.iXDirection[dir]*16);
-		//currentPosition.setPixelColumn(currentPosition.getPixelColumn()+Utility.iYDirection[dir]*16);
-		
+
 		System.out.println(currentPosition.getRow()+"CURRENTCOORDINATE"+currentPosition.getColumn());
 		//System.out.println(currentPosition.getPixelRow()+"CURRENTPIXEL"+currentPosition.getPixelColumn());
 		if (currentPosition.getPixelRow()%16==0 && currentPosition.getPixelColumn()%16==0)
@@ -129,12 +124,9 @@ public class Butler implements Comparable<Butler>
 		else{
 			Simulator.sdebugger("WHOOPS");
 		}
-//		
-//		if(transitioning==true){
-//			move(p);
-//		}
 	}
 	
+	//GET BUTLERS DIRECTION OF MOVEMENT
 	public int getDirection(Position source, Position destination){
 		if(source.getRow()-destination.getRow()>1||source.getColumn()-destination.getColumn()>1){
 			return 4;
@@ -164,6 +156,7 @@ public class Butler implements Comparable<Butler>
 		}
 	}
 
+	//RETURN THE PRIVATE ZONE OF THE BUTLER
 	public ArrayList<Position> getPrivateZone()
 	{
 		LinkedList<Position> myPath = new LinkedList<>(path.piPath);
@@ -182,11 +175,13 @@ public class Butler implements Comparable<Butler>
 		return privateZone;
 	}
 	
+	//CHECK IF IT HAS ARRIVED AT DESTINATION
 	public boolean atDestination()
 	{
 		return this.currentPosition.equals(assignment.position);
 	}
 	
+	//COMPARE WITH ANOTHER BUTLER
 	@Override
 	public int compareTo(Butler arg0) {
 		Butler butler = (Butler)arg0;

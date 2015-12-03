@@ -6,30 +6,30 @@ package com.ai.major;
 /**
  * the tables are used to speed up computation
  */
-public class Warehouse2 extends Warehouse
+public class Warehouse10 extends Warehouse
 {
-	public Warehouse2() {
+	public Warehouse10() {
 		// TODO Auto-generated constructor stub
-		String[] MazeDefine2=
+		String[] MazeDefine3=
 			{
 				"XXXXXXXXXXXXXXXXXXXXX",	// 1
 				"X                   X",	// 2
-				"X  X  X  X OX  X  X X",	// 3
-				"X OX  X  X  X  X  X X",	// 4
-				"X  X OX  X  X OX OX X",	// 5
-				"X  X  X  X  X  X  X X",	// 6
-				"X  X  X OX  X  X  X X",	// 7
-				"X  X  X  X  X  X  X X",	// 8
-				"X  X  X  X  X  X  X X",	// 9
-				"X  X  X  X  X  X  X X",	// 10
+				"X   XXXXXXXXXXXX    X",	// 3
+				"X  XO  O   O   OX   X",	// 4
+				"X X              X  X",	// 5
+				"X XO            OX  X",	// 6
+				"X X              X  X",	// 7
+				"X  XO          OX   X",	// 8
+				"X   X          X    X",	// 9
+				"X                   X",	// 10
 				"X                   X",	// 11
 				"X                   X",	// 12
 				"X                   X",	// 13
 				"X                   X",	// 14
-				"XWWWWWW           GGX",	// 15
+				"XWWWWWWWW   GGGGGGGGX",	// 15
 				"XXXXXXXXXXXXXXXXXXXXX",	// 16
 			};
-		this.MazeDefine=MazeDefine2;
+		this.MazeDefine=MazeDefine3;
 	}
 }
 

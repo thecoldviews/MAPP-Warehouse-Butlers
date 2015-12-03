@@ -21,7 +21,10 @@ public class FindPath {
 	static Position end;
 	static int forBultler;
 	static Position[][] environment;
+	static int statesExpanded = 0;
 	
+	
+	//COMPARE TWO POSITIONS
 	static class PositionComparator implements Comparator<Position>
     {
 
@@ -38,7 +41,8 @@ public class FindPath {
     	
     }
 
-	public static Path findPathAstar(Map map, int butler,Position source, Position destination)
+	//A STAR
+	public static PathDetails findPathAstar(Map map, int butler,Position source, Position destination)
 	{
 		Simulator.sdebugger("BasicMAPP");
 		forBultler = butler;
@@ -60,6 +64,7 @@ public class FindPath {
          }
 		map.environment[source.getRow()][source.getColumn()].finalCost = 0;
 		open.add(source);
+		
 		Position current = null;
 		path = new Path();
 		closed = new boolean[rows][columns];
@@ -71,18 +76,23 @@ public class FindPath {
             if(current==null)
             	{
             	System.out.println("popped is null");
-            	return new Path();
+            	Path p =  new Path();
+            	return new PathDetails(p, statesExpanded);
             	
             	}
             System.out.println("popped position at "+current.getRow()+","+current.getColumn());
             closed[current.getRow()][current.getColumn()]=true; 
                         	
             if(current.equals(destination)){
-                return constructPath(map); 
+              Path p =  constructPath(map); 
+              return new PathDetails(p,statesExpanded);
             } 
 
             Position neighbour; 
             System.out.println("Expanding position "+current.getRow()+","+current.getColumn());
+            
+            statesExpanded++;
+            System.out.println("Expandiiiiingggg ++++++++++++++++++++++++++ "+statesExpanded);
             if(current.getRow()-1>=0){
             	neighbour = map.environment[current.getRow()-1][current.getColumn()];
                 checkAndUpdateCost(current, neighbour, current.finalCost+V_H_COST);                
@@ -108,6 +118,7 @@ public class FindPath {
         
 	}
 		
+	//CHECK AND UPDATE
 	static void checkAndUpdateCost(Position current, Position neighbour, int cost){
 			
 			
@@ -147,22 +158,30 @@ public class FindPath {
 		        neighbour.finalCost = t_final_cost;
 		        neighbour.parent = current;
 		        System.out.println("Add "+neighbour.getRow()+","+neighbour.getColumn()+ " to open with cost "+t_final_cost);
-		        if(!inOpen)open.add(neighbour);
+		        if(!inOpen)
+		        	{
+		        	open.add(neighbour);
+		        	
+		        	}
 		    }
 		}
 			
+	//IS SOURCE CHECK?
 	public boolean isSource(Position test, Position source)
 	{
 		
 		return source.equals(test);
 	}
 	
+	
+	//IS DESTINATION CHECK?
 	public boolean isDestination(Position test, Position destination)
 	{
 		
 		return destination.equals(test);
 	}
 	
+	//GET ALTERNATE PATH
 	public static ArrayList<Position> getAlternatePath(Position from, Position to , Position notVia)
 	{
 		System.out.println("Finding alternate path between "+from.getRow()+","+from.getColumn()+ " and "+to.getRow()+","+to.getColumn()+ " and avoid "+notVia.getRow()+","+notVia.getColumn());
@@ -180,6 +199,7 @@ public class FindPath {
          }
          environment[from.getRow()][from.getColumn()].finalCost = 0;
          alternateOpen.add(environment[from.getRow()][from.getColumn()]);
+        
          
          Position current;
          
@@ -198,7 +218,7 @@ public class FindPath {
              if(current.equals(to)){
                  return constructAlternatePath(to);
              } 
-
+             statesExpanded++;
              Position neighbour;  
              if(current.getRow()-1>=0){
                  neighbour = environment[current.getRow()-1][current.getColumn()];
@@ -227,6 +247,7 @@ public class FindPath {
          
 	}
 	
+	//ALTERNATE CHECK AND UPDATE COST
 	static void alternateCheckAndUpdateCost(Position altCurrent, Position neighbour, Position notVia,  int cost){
         if(neighbour.isWall || alternateClosed[neighbour.getRow()][neighbour.getColumn()] || neighbour.equals(notVia) || neighbour.isOthersTarget(forBultler))
         	return;
@@ -236,11 +257,15 @@ public class FindPath {
         if(!inOpen || t_final_cost<neighbour.finalCost){
             neighbour.finalCost = t_final_cost;
             neighbour.parent = altCurrent;
-            if(!inOpen)alternateOpen.add(neighbour);
+            if(!inOpen)
+            	{
+            	alternateOpen.add(neighbour);
+            	
+            	}
         }
     }
 	
-	
+	//CONSTRUCT ALTERNATE PATH
 	static ArrayList<Position> constructAlternatePath(Position to)
 	{
 		Position current;
@@ -262,6 +287,8 @@ public class FindPath {
         {  return path;}
 	}
 	
+	
+	// CONSTRUCT PATH
 	static Path constructPath(Map wh)
 	{
 		// Now construct the path

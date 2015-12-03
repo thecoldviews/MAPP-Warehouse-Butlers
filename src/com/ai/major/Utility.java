@@ -12,6 +12,7 @@ public class Utility
 {
 	public static final Color[] ColorArray={Color.BLUE,Color.CYAN,Color.GREEN,Color.MAGENTA,Color.ORANGE,Color.PINK,Color.RED,Color.YELLOW};
 	// for direction computation
+	public long states;
 	public static final int numButlers = 8;
 	public static final int[] iXDirection={1,0,-1,0,0};
 	public static final int[] iYDirection={0,-1,0,1,0};
