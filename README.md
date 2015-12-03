@@ -16,7 +16,7 @@ One can create custom maps by either editing the current warehouses or adding ne
 One can then add this warehouse to the java applet easily by following the example of other added warehouses in the applet file.
 
 Example:
-![Code](https://github.com/altercation/solarized/raw/master/code.png)
-![Snap](https://github.com/altercation/solarized/raw/master/snap.png)
+![Code](https://github.com/jokereactive/MAPP-Warehouse-Butlers/blob/master/Code.PNG)
+![Snap](https://github.com/jokereactive/MAPP-Warehouse-Butlers/blob/master/Snap.PNG)
 
 
