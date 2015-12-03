@@ -7,24 +7,25 @@ One can create custom maps by either editing the current warehouses or adding ne
 - 'O' represents items
 - 'W' represents workstations
 - 'G' represents conveyor belts //Not used right now.
+- '_' or Blank Space for Blank.
 
 Example:
 * String MazeDefine=
  * {
   * "XXXXXXXXXXXXXXXXXXXXX",	// 1
-  * "XO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OOX",	// 2
-  * "X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;X",	// 3
-  * "X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;XOOX&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;X",	// 4
-  * "X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;XOOX&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;X",	// 5
-  * "X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;X",	// 6
-  * "X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;X",	// 7
-  * "X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;X",	// 8
-  * "XO&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;X",	// 9
-  * "X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;&nbsp;X&nbsp;X",	// 10
-  * "X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X",	// 11
-  * "X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                   X",	// 12
-  * "X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                   X",	// 13
-  * "X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                   X",	// 14
-  * "XWWWWWWW&nbsp;&nbsp;&nbsp;&nbsp;GGGGGGGGX",	// 15
+  * "XO________________OOX",	// 2
+  * "X__X__X__X__X__X__X_X",	// 3
+  * "X__X__X__XOOX__X__X_X",	// 4
+  * "X__X__X__XOOX__X__X_X",	// 5
+  * "X__X__X__X__X__X__X_X",	// 6
+  * "X__X__X__X__X__X__X_X",	// 7
+  * "X__X__X__X__X__X__X_X",	// 8
+  * "XO_X__X__X__X__X__X_X",	// 9
+  * "X__X__X__X__X__X__X_X",	// 10
+  * "X___________________X",	// 11
+  * "X___________________X",	// 12
+  * "X___________________X",	// 13
+  * "X___________________X",	// 14
+  * "XWWWWWWW____GGGGGGGGX",	// 15
   * "XXXXXXXXXXXXXXXXXXXXX",	// 16
  * };
