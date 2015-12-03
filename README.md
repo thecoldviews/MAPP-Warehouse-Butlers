@@ -9,6 +9,8 @@ One can create custom maps by either editing the current warehouses or adding ne
 - 'G' represents conveyor belts //Not used right now.
 - '_' or Blank Space for Blank.
 
+One can then add this warehouse to the java applet easily by following the example of other added warehouses in the applet file.
+
 Example:
 * String MazeDefine=
  * {
