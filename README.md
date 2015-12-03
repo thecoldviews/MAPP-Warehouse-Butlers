@@ -15,7 +15,7 @@ One can create custom maps by either editing the current warehouses or adding ne
 
 One can then add this warehouse to the java applet easily by following the example of other added warehouses in the applet file.
 
-Example:
+##Example:
 ![Code](https://github.com/jokereactive/MAPP-Warehouse-Butlers/blob/master/Code.PNG)
 ![Snap](https://github.com/jokereactive/MAPP-Warehouse-Butlers/blob/master/Snap.PNG)
 
